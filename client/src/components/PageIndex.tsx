@@ -21,7 +21,7 @@ export default function PageIndex({ cpusData }: PageIndexProps) {
 		const cpuTable = document.getElementById(id);
     if (cpuTable) {
       cpuTable.scrollIntoView({ behavior: 'smooth' });
-			const button = cpuTable.querySelector('.show-hide-button');
+			const button = cpuTable.querySelector('.show-hide-button') as HTMLButtonElement;
 			if (button && button.textContent === 'Show') {
 				button.click();
 			}

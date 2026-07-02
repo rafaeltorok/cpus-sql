@@ -106,8 +106,12 @@ export default function App() {
       element.scrollIntoView({ behavior: 'smooth' });
 
       const cpuTable = document.getElementById(cpuTableId);
-      const hideButton = cpuTable.querySelector('.show-hide-button');
-      const showAllButton = document.getElementById('show-all-button');
+      const showAllButton = document.getElementById('show-all-button') as HTMLButtonElement;
+      let hideButton;
+
+      if (cpuTable) {
+        hideButton = cpuTable.querySelector('.show-hide-button') as HTMLButtonElement;
+      }
       
       if (
         hideButton && 
