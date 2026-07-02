@@ -1,0 +1,96 @@
+services:
+  dev-db:
+    image: postgres:16-alpine
+    container_name: cpus-sql-dev-db
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: data
+    ports:
+      - 5434:5432
+    volumes:
+      - ./psql_data:/var/lib/postgresql/data
+    networks:
+      - dev-network
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "admin"]
+      interval: 30s
+      timeout: 30s
+      retries: 5
+      start_period: 60s
+
+  dev-server:
+    depends_on:
+      dev-db:
+        condition: service_healthy
+    build:
+      context: ./server
+      dockerfile: dev.Dockerfile
+    image: cpus-sql-dev-server
+    container_name: cpus-sql-dev-server
+    networks:
+      - dev-network
+    volumes:
+      - ./server:/usr/src/app/server
+      - server_node_modules:/usr/src/app/server/node_modules
+    environment:
+      DATABASE_URL: postgres://admin:admin@dev-postgres:5432/data
+      PORT: 3001
+      DATABASE_SSL: false
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3001/api/health"]
+      interval: 30s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
+
+  dev-client:
+    depends_on:
+      dev-server:
+        condition: service_healthy
+    build:
+      context: ./client
+      dockerfile: dev.Dockerfile
+    image: cpus-sql-dev-client
+    container_name: cpus-sql-dev-client
+    networks:
+      - dev-network
+    volumes:
+      - ./client:/usr/src/app/client
+      - client_node_modules:/usr/src/app/client/node_modules
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5173"]
+      interval: 30s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
+
+  dev-nginx:
+    depends_on:
+      dev-server:
+        condition: service_healthy
+      dev-client:
+        condition: service_healthy
+    image: nginx:stable-alpine
+    container_name: cpus-sql-dev-nginx
+    ports:
+      - 8080:80
+    networks:
+      - dev-network
+    volumes:
+      - ./nginx/nginx.dev.conf:/etc/nginx/conf.d/default.conf:ro
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:80"]
+      interval: 30s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
+
+volumes:
+  psql_data:
+  server_node_modules:
+  client_node_modules:
+
+networks:
+  dev-network:
+    driver: bridge
