@@ -1,4 +1,8 @@
 import axios from 'axios';
+
+// TypeScript types
+import type { CpuInputType } from '../types/types';
+
 const baseUrl = "/api/cpus";
 
 const getAll = () => {
@@ -6,17 +10,17 @@ const getAll = () => {
   return request.then(response => response.data);
 };
 
-const create = newObject => {
+const create = (newObject: CpuInputType) => {
   const request = axios.post(baseUrl, newObject);
   return request.then(response => response.data);
 };
 
-const update = (id, newObject) => {
+const update = (id: number, newObject: CpuInputType) => {
   const request = axios.put(`${baseUrl}/${id}`, newObject);
   return request.then(response => response.data);
 };
 
-const remove = (id) => {
+const remove = (id: number) => {
   const request = axios.delete(`${baseUrl}/${id}`);
   return request.then(response => response.data);
 };
