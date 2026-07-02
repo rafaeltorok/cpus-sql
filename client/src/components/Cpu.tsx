@@ -1,5 +1,7 @@
+// React
 import { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
+
+// CSS styles
 import "../styles/cpu.css";
 
 
@@ -14,7 +16,7 @@ function renderRow(rowName, rowData, cpuHeaderClass) {
 };
 
 // Component
-function Cpu ({ cpu, onDelete, showAll }) {
+export default function Cpu({ cpu, onDelete, showAll }) {
 	const [showBody, setShowBody] = useState(false);
 
 	// Sync individual state with global "Show All" toggle
@@ -75,24 +77,3 @@ function Cpu ({ cpu, onDelete, showAll }) {
 		</table>
 	)
 }
-
-Cpu.displayName = "CPU";
-
-Cpu.propTypes = {
-  cpu: PropTypes.shape({
-    id: PropTypes.string.isRequired,
-    manufacturer: PropTypes.string.isRequired,
-    model: PropTypes.string.isRequired,
-    cores: PropTypes.number.isRequired,
-    threads: PropTypes.number.isRequired,
-		cache: PropTypes.number.isRequired,
-    baseclock: PropTypes.number.isRequired,
-    boostclock: PropTypes.number.isRequired,
-    architecture: PropTypes.string.isRequired,
-		mbsocket: PropTypes.string.isRequired
-  }).isRequired,
-  onDelete: PropTypes.func.isRequired,
-  showAll: PropTypes.bool.isRequired
-}
-
-export default Cpu;

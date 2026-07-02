@@ -1,5 +1,3 @@
-import PropTypes from "prop-types";
-
 // Components
 import Cpu from "./Cpu";
 
@@ -27,12 +25,3 @@ export default function CpuList({ cpus, deleteCpu, showAll, scrollToIndex }) {
     </>
   );
 }
-
-CpuList.displayName = "CpuList";
-
-CpuList.prototype = {
-  cpus: PropTypes.array.isRequired,
-  deleteCpu: PropTypes.func.isRequired,
-  showAll: PropTypes.bool.isRequired,
-  scrollToIndex: PropTypes.func.isRequired,
-};

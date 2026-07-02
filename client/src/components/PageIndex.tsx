@@ -1,9 +1,12 @@
+// React
 import { useState } from 'react';
-import PropTypes from 'prop-types';
+
+// CSS styles
 import "../styles/pageIndex.css";
 
 
-export default function PageIndex ({ cpusData }) {
+// Component
+export default function PageIndex({ cpusData }) {
   const [showIndex, setShowIndex] = useState(false);
 
   // Scroll to cpu when index item is clicked
@@ -57,9 +60,3 @@ export default function PageIndex ({ cpusData }) {
 		</div>
   )
 }
-
-PageIndex.displayName = "PageIndex";
-
-PageIndex.propTypes = {
-	cpusData: PropTypes.array.isRequired,
-};

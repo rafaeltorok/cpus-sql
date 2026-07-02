@@ -1,10 +1,10 @@
+// React
 import { forwardRef, useImperativeHandle, useState } from 'react';
-import PropTypes from 'prop-types';
 
 // Components
 import FormRow from './FormRow';
 
-// Styles
+// CSS styles
 import "../styles/addCpuForm.css";
 
 
@@ -161,11 +161,5 @@ const AddCpuForm = forwardRef(({ createCpu }, ref) => {
 		</div>
 	)
 });
-
-AddCpuForm.displayName = "AddCpuForm";
-
-AddCpuForm.propTypes = {
-	createCpu: PropTypes.func.isRequired
-}
 
 export default AddCpuForm;

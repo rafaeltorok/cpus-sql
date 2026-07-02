@@ -1,7 +1,7 @@
+// React
 import { useState, useEffect } from "react";
-import PropTypes from "prop-types";
 
-// CSS Styles
+// CSS styles
 import "../styles/searchBar.css";
 
 // Component
@@ -37,10 +37,3 @@ export default function SearchBar({ searchTerm, setSearchTerm }) {
     </div>
   );
 }
-
-SearchBar.displayName = "SearchBar";
-
-SearchBar.propTypes = {
-  searchTerm: PropTypes.string.isRequired,
-  setSearchTerm: PropTypes.func.isRequired,
-};
