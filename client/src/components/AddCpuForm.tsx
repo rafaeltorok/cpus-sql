@@ -7,10 +7,19 @@ import FormRow from './FormRow';
 // CSS styles
 import "../styles/addCpuForm.css";
 
+// TypeScript types
+import type { CpuInputType } from '../types/types';
+
+interface AddCpu {
+	addCpu: (cpu: CpuInputType) => void;
+};
+
+type Event = React.ChangeEvent<HTMLInputElement>;
+
 
 // Component
-const AddCpuForm = forwardRef(({ createCpu }, ref) => {
-	const [cpuSpecs, setCpuSpecs] = useState({
+const AddCpuForm = forwardRef(({ addCpu }: AddCpu, ref) => {
+	const [cpuSpecs, setCpuSpecs] = useState<CpuInputType>({
 		manufacturer: "",
 		model: "",
 		cores: 0,
@@ -21,15 +30,15 @@ const AddCpuForm = forwardRef(({ createCpu }, ref) => {
 		architecture: "",
 		mbsocket: "",
 	});
-	const [showAddForm, setShowAddForm] = useState(false);
+	const [showAddForm, setShowAddForm] = useState<boolean>(false);
 
 	useImperativeHandle(ref, () => ({
 		toggleVisibility: () => setShowAddForm(prev => !prev)
 	}));
 
-	const addCpu = (event) => {
+	const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
-		createCpu({
+		addCpu({
 			manufacturer: cpuSpecs.manufacturer.trim(),
 			model: cpuSpecs.model.trim(),
 			cores: cpuSpecs.cores,
@@ -56,7 +65,7 @@ const AddCpuForm = forwardRef(({ createCpu }, ref) => {
 
 	return (
 		<div>
-			<form onSubmit={addCpu} id="add-cpu-form">
+			<form onSubmit={handleSubmit} id="add-cpu-form">
 				<fieldset className="add-cpu-field">
 					<button
 						id='add-cpu-button'
@@ -74,7 +83,7 @@ const AddCpuForm = forwardRef(({ createCpu }, ref) => {
 								label="Manufacturer"
 								placeholder="AMD"
 								value={cpuSpecs.manufacturer}
-								onChange={(e) => setCpuSpecs({ ...cpuSpecs, manufacturer: e.target.value })}
+								onChange={(e: Event) => setCpuSpecs({ ...cpuSpecs, manufacturer: e.target.value })}
 							/>
 
 							<FormRow
@@ -83,7 +92,7 @@ const AddCpuForm = forwardRef(({ createCpu }, ref) => {
 								label="Model"
 								placeholder="Ryzen 7 5800X"
 								value={cpuSpecs.model}
-								onChange={(e) => setCpuSpecs({ ...cpuSpecs, model: e.target.value })}
+								onChange={(e: Event) => setCpuSpecs({ ...cpuSpecs, model: e.target.value })}
 							/>
 
 							<FormRow
@@ -91,8 +100,8 @@ const AddCpuForm = forwardRef(({ createCpu }, ref) => {
 								type="number"
 								label="Cores"
 								placeholder="8"
-								value={cpuSpecs.cores}
-								onChange={(e) => setCpuSpecs({ ...cpuSpecs, cores: e.target.value })}
+								value={String(cpuSpecs.cores)}
+								onChange={(e: Event) => setCpuSpecs({ ...cpuSpecs, cores: Number(e.target.value) })}
 							/>
 
 							<FormRow
@@ -100,8 +109,8 @@ const AddCpuForm = forwardRef(({ createCpu }, ref) => {
 								type="number"
 								label="Threads"
 								placeholder="16"
-								value={cpuSpecs.threads}
-								onChange={(e) => setCpuSpecs({ ...cpuSpecs, threads: e.target.value })}
+								value={String(cpuSpecs.threads)}
+								onChange={(e: Event) => setCpuSpecs({ ...cpuSpecs, threads: Number(e.target.value) })}
 							/>
 
 							<FormRow
@@ -109,8 +118,8 @@ const AddCpuForm = forwardRef(({ createCpu }, ref) => {
 								type="number"
 								label="Cache (MB)"
 								placeholder="36"
-								value={cpuSpecs.cache}
-								onChange={(e) => setCpuSpecs({ ...cpuSpecs, cache: e.target.value })}
+								value={String(cpuSpecs.cache)}
+								onChange={(e: Event) => setCpuSpecs({ ...cpuSpecs, cache: Number(e.target.value) })}
 							/>
 
 							<FormRow
@@ -118,8 +127,8 @@ const AddCpuForm = forwardRef(({ createCpu }, ref) => {
 								type="number"
 								label="Base Clock (GHz)"
 								placeholder="3.8"
-								value={cpuSpecs.baseclock}
-								onChange={(e) => setCpuSpecs({ ...cpuSpecs, baseclock: e.target.value })}
+								value={String(cpuSpecs.baseclock)}
+								onChange={(e: Event) => setCpuSpecs({ ...cpuSpecs, baseclock: Number(e.target.value) })}
 							/>
 
 							<FormRow
@@ -127,8 +136,8 @@ const AddCpuForm = forwardRef(({ createCpu }, ref) => {
 								type="number"
 								label="Boost Clock (GHz)"
 								placeholder="4.7"
-								value={cpuSpecs.boostclock}
-								onChange={(e) => setCpuSpecs({ ...cpuSpecs, boostclock: e.target.value })}
+								value={String(cpuSpecs.boostclock)}
+								onChange={(e: Event) => setCpuSpecs({ ...cpuSpecs, boostclock: Number(e.target.value) })}
 							/>
 
 							<FormRow
@@ -137,7 +146,7 @@ const AddCpuForm = forwardRef(({ createCpu }, ref) => {
 								label="Architecture"
 								placeholder="Zen 3"
 								value={cpuSpecs.architecture}
-								onChange={(e) => setCpuSpecs({ ...cpuSpecs, architecture: e.target.value })}
+								onChange={(e: Event) => setCpuSpecs({ ...cpuSpecs, architecture: e.target.value })}
 							/>
 
 							<FormRow
@@ -146,7 +155,7 @@ const AddCpuForm = forwardRef(({ createCpu }, ref) => {
 								label="Socket"
 								placeholder="AM4"
 								value={cpuSpecs.mbsocket}
-								onChange={(e) => setCpuSpecs({ ...cpuSpecs, mbsocket: e.target.value })}
+								onChange={(e: Event) => setCpuSpecs({ ...cpuSpecs, mbsocket: e.target.value })}
 							/>
 
 							<div className="form-row">

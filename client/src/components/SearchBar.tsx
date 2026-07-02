@@ -4,8 +4,14 @@ import { useState, useEffect } from "react";
 // CSS styles
 import "../styles/searchBar.css";
 
+// TypeScript types
+interface SearchBarProps {
+  searchTerm: string;
+  setSearchTerm: (searchTerm: string) => void;
+}
+
 // Component
-export default function SearchBar({ searchTerm, setSearchTerm }) {
+export default function SearchBar({ searchTerm, setSearchTerm }: SearchBarProps) {
   const [showSearch, setShowSearch] = useState(false);
 
   useEffect(() => {

@@ -4,13 +4,20 @@ import { useState } from 'react';
 // CSS styles
 import "../styles/pageIndex.css";
 
+// TypeScript types
+import type { CpuType } from '../types/types';
+
+interface PageIndexProps {
+	cpusData: CpuType[];
+};
+
 
 // Component
-export default function PageIndex({ cpusData }) {
+export default function PageIndex({ cpusData }: PageIndexProps) {
   const [showIndex, setShowIndex] = useState(false);
 
   // Scroll to cpu when index item is clicked
-  const scrollToCpu = (id) => {
+  const scrollToCpu = (id: string) => {
 		const cpuTable = document.getElementById(id);
     if (cpuTable) {
       cpuTable.scrollIntoView({ behavior: 'smooth' });

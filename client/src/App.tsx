@@ -10,6 +10,9 @@ import SearchBar from './components/SearchBar';
 // Services
 import cpuService from './services/cpus';
 
+// TypeScript types
+import type { CpuType, CpuInputType } from './types/types';
+
 // Styles
 import './styles/App.css';
 
@@ -20,10 +23,10 @@ export default function App() {
   const baseUrl = '/api/cpus';
 
   // React states
-  const [cpus, setCpus] = useState([]);
-  const [error, setError] = useState(null);
-  const [showAll, setShowAll] = useState(false); // Controls the visibility of all tables
-  const [searchTerm, setSearchTerm] = useState("");
+  const [cpus, setCpus] = useState<CpuType[]>([]);
+  const [error, setError] = useState<string>("");
+  const [showAll, setShowAll] = useState<boolean>(false); // Controls the visibility of all tables
+  const [searchTerm, setSearchTerm] = useState<string>("");
 
   const cpuFormRef = useRef();
 
@@ -33,18 +36,21 @@ export default function App() {
       try {
         const response = await fetch(baseUrl);
         if (!response.ok) throw new Error('Failed to fetch data from the server');
-        const data = await response.json();
+        const data: CpuType[] = await response.json();
         setCpus(data);
-      } catch (err) {
-        setError(err.message);
+      } catch (err: unknown) {
+        if (err instanceof Error) {
+          setError(err.message);
+        } else {
+          setError(String(err));
+        }
       }
     }
-
     fetchData();
   }, []);
 
   // Add a new CPU using the data from the add form
-  const addCpu = (cpuObject) => {
+  const addCpu = (cpuObject: CpuInputType): void => {
     if (
         cpuObject.manufacturer === '' ||
         cpuObject.model === '' ||
@@ -68,14 +74,13 @@ export default function App() {
         alert(`${returnedObject.manufacturer} ${returnedObject.model} was added!`);
         cpuFormRef.current.toggleVisibility();
       })
-      .catch (exception => {
+      .catch (_exception => {
         alert("Failed to add new CPU");
-        console.error("Error adding new CPU:", exception);
       })
   };
 
   // Remove a CPU from the list
-  const deleteCpu = (id, manufacturer, model) => {
+  const deleteCpu = (id: number, manufacturer: string, model: string) => {
     const confirmDeletion = window.confirm(`Remove ${manufacturer} ${model} from the list?`);
 
     if (confirmDeletion) {
@@ -84,14 +89,14 @@ export default function App() {
           // Remove the CPU from the state
           setCpus(cpus.filter(cpu => cpu.id !== id));
         })
-        .catch(error => {
-          console.error('Error deleting CPU:', error);
+        .catch(_exception => {
+          alert("Failed to remove CPU");
         });
     }
   }
   
   // Scroll the page to the respective data table
-  function scrollToIndex(cpuTableId) {
+  function scrollToIndex(cpuTableId: string): void {
     const element = document.getElementById('page-index-container');
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
@@ -111,7 +116,7 @@ export default function App() {
   }
 
   // Filter the list based on the search term
-  const filteredCpus = cpus.filter((cpu) => {
+  const filteredCpus: CpuType[] = cpus.filter((cpu) => {
     return `${cpu.manufacturer} ${cpu.model}`
       .toLowerCase()
       .includes(searchTerm.toLowerCase());
@@ -123,7 +128,7 @@ export default function App() {
         <h1 id='main-page-title'>CPU Manager</h1> {/* Add ref to the <h1> element */}
 
         <AddCpuForm 
-          createCpu={addCpu}
+          addCpu={addCpu}
           ref={cpuFormRef}
         />
 

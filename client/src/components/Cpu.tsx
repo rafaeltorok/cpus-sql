@@ -4,9 +4,18 @@ import { useState, useEffect } from 'react';
 // CSS styles
 import "../styles/cpu.css";
 
+// TypeScript types
+import type { CpuType } from '../types/types';
+
+interface CpuProps {
+	cpu: CpuType;
+	onDelete: (id: number, manufacturer: string, model: string) => void;
+	showAll: boolean;
+}
+
 
 // Render each data row inside the CPU table
-function renderRow(rowName, rowData, cpuHeaderClass) {
+function renderRow(rowName: string, rowData: string, cpuHeaderClass: string) {
 	return (
 		<tr>
 			<th>{rowName}</th>
@@ -16,7 +25,7 @@ function renderRow(rowName, rowData, cpuHeaderClass) {
 };
 
 // Component
-export default function Cpu({ cpu, onDelete, showAll }) {
+export default function Cpu({ cpu, onDelete, showAll }: CpuProps) {
 	const [showBody, setShowBody] = useState(false);
 
 	// Sync individual state with global "Show All" toggle
@@ -68,7 +77,7 @@ export default function Cpu({ cpu, onDelete, showAll }) {
           {renderRow('ARCHITECTURE', `${cpu.architecture}`, cpuHeaderClass)}
           {renderRow('SOCKET', `${cpu.mbsocket}`, cpuHeaderClass)}
 					<tr>
-						<td colSpan={"2"} id='delete-cpu-button'>
+						<td colSpan={2} id='delete-cpu-button'>
 							<button onClick={() => onDelete(cpu.id, cpu.manufacturer, cpu.model)}>Delete</button>
 						</td>
 					</tr>
