@@ -1,13 +1,14 @@
-import app from "./app";
-import sequelize from "./utils/db";
+import app from "./app.js";
+import sequelize from "./utils/db.js";
 
 // Utils
-import { PORT } from "./utils/config";
+import { PORT } from "./utils/config.js";
 
 // Handle the connection and start the server
 async function start() {
   try {
     await sequelize.authenticate();
+    await sequelize.sync();
 
     app.listen(PORT, () => {
       console.log(`Server running on port ${PORT}`);
