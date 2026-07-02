@@ -4,10 +4,6 @@ dotenv.config();
 import type { Request, Response, NextFunction } from "express";
 
 export default function errorHandler(err: unknown, _req: Request, res: Response, next: NextFunction) {
-  if (process.env.NODE_ENV !== "test") {
-    console.error(err); // Log on the server for debugging
-  }
-
   if (err instanceof Error) {
     if (err.name === "SequelizeUniqueConstraintError") {
       return res.status(400).json({ error: "CPU must be unique" });
