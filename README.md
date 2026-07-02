@@ -10,62 +10,57 @@
 
 ## About
 
-A **React web UI** to be used with any backend server that exposes the routes on http://localhost:3001/api/cpus, the UI supports the following CRUD operations: GET, POST and DELETE.
+A React frontend with an Express + Sequelize server fullstack application. Build with TypeScript.
+CPUs SQL displays a list with your favorite CPUs specifications, you can add, remove and customize your own personal list of processors.
 
 <img src="./img/web-ui.png" alt="CPUs SQL Web UI" width="400"/>
 
 
 ## Setup
 
-Enter the server folder
-```bash
-cd ./server
-```
+- Enter the server folder
+  ```bash
+  cd ./server
+  ```
 
-Install dependencies
-```bash
-npm install
-```
+- Install dependencies
+  ```bash
+  npm install
+  ```
 
-Enter the client folder
-```bash
-cd ./client
-```
+- Enter the client folder
+  ```bash
+  cd ./client
+  ```
 
-Install dependencies
-```bash
-npm install
-```
-
-
-Make sure the PostgreSQL service is running
-```bash
-sudo systemctl start postgres
-```
+- Install dependencies
+  ```bash
+  npm install
+  ```
 
 
 ## Usage
 
 ### Backend
 
-Production mode (serves a static build of the frontent)
-```bash
-npm run start
-```
+- Production mode (serves a static build of the frontend)
+  ```bash
+  npm run start
+  ```
 
-Development mode (enables hot reloading of files)
-```bash
-npm run dev
-```
+- Development mode (enables hot reloading of files)
+  ```bash
+  npm run dev
+  ```
 
 - HTTP requests on http://localhost:3001
 
 ### Frontend
 
-Start the frontend
-```bash
-npm run dev
-```
+- Start the frontend
+  ```bash
+  npm run dev
+  ```
 
 - Access the Web UI on http://localhost:5173
 
