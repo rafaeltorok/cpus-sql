@@ -1,0 +1,31 @@
+POST http://localhost:3001/api/cpus
+Content-Type: application/json
+
+{ 
+  "manufacturer": "AMD",
+  "model": "Ryzen 5 5600X3D",
+  "cores": 6,
+  "threads": 12,
+  "cache": 99,
+  "baseclock": 3.3,
+  "boostclock": 4.4,
+  "architecture": "Zen3",
+  "mbsocket": "AM4"
+}
+
+###
+
+POST http://localhost:3001/api/cpus
+Content-Type: application/json
+
+{
+  "manufacturer": "Intel",
+  "model": "Core i9-13900K",
+  "cores": 24,
+  "threads": 32,
+  "cache": 36,
+  "baseclock": 3.0,
+  "boostclock": 5.8,
+  "architecture": "Raptor Lake",
+  "mbsocket": "LGA 1700"
+}

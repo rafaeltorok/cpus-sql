@@ -1,0 +1,14 @@
+PUT http://localhost:3001/api/cpus/10
+Content-Type: application/json
+
+{ 
+  "manufacturer": "AMD",
+  "model": "Ryzen 5 5600G",
+  "cores": 6,
+  "threads": 12,
+  "cache": 19,
+  "baseclock": 3.9,
+  "boostclock": 4.4,
+  "architecture": "Zen3",
+  "mbsocket": "AM4"
+}

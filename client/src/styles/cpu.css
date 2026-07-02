@@ -1,0 +1,59 @@
+.cpu-data-table {
+  width: 100%;
+  max-width: 100%;
+}
+
+.cpu-data-table {
+  background-color: rgba(0, 0, 0, 0.75);
+  border: 0.2rem solid;
+  border-radius: 1rem;
+  border-style: double;
+}
+
+.cpu-data-table th, 
+.cpu-data-table td {
+  border: 0.1rem solid black;
+  border-style: groove;
+  padding: 1.2rem;
+  font-size: 0.9rem;
+}
+
+.cpu-data-table th {
+  background-color: rgba(18, 18, 18, 0.9);
+}
+
+.cpu-data-table td {
+  background-color: rgba(0, 0, 0, 0.9);
+  font-weight: bold;
+  border-style: inset;
+}
+
+.cpu-data-table #delete-cpu-button {
+  border-bottom-left-radius: 1rem;
+  border-bottom-right-radius: 1rem;
+  background-color: rgba(5, 5, 5, 0.9);
+}
+
+.cpu-data-table thead tr:first-child th {
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.9);
+  font-size: 1.4rem;
+  font-weight: bold;
+  border-style: groove;
+  border-top-left-radius: 1rem;
+  border-top-right-radius: 1rem;
+}
+
+.cpu-data-table .table-header {
+  width: 100%;
+  background-color: rgba(5, 5, 5, 0.9);
+  font-size: 1.2rem;
+  font-weight: bold;
+  border-style: groove;
+}
+
+.back-to-index-button,
+.back-to-index-button:active {
+  margin-top: 0.1rem;
+  margin-bottom: 2.5rem;
+}
