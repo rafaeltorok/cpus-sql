@@ -1,5 +1,5 @@
 // React
-import { forwardRef, useImperativeHandle, useState } from 'react';
+import { useState } from 'react';
 
 // Components
 import FormRow from './FormRow';
@@ -10,15 +10,17 @@ import "../styles/addCpuForm.css";
 // TypeScript types
 import type { CpuInputType } from '../types/types';
 
-interface AddCpu {
-	addCpu: (cpu: CpuInputType) => void;
+interface AddCpuFormProps {
+	addCpu: (cpu: CpuInputType) => Promise<boolean>;
+	showAddForm: boolean;
+	setShowAddForm: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 type Event = React.ChangeEvent<HTMLInputElement>;
 
 
 // Component
-const AddCpuForm = forwardRef(({ addCpu }: AddCpu, ref) => {
+export default function AddCpuForm({ addCpu, showAddForm, setShowAddForm }: AddCpuFormProps) {
 	const [cpuSpecs, setCpuSpecs] = useState<CpuInputType>({
 		manufacturer: "",
 		model: "",
@@ -30,15 +32,13 @@ const AddCpuForm = forwardRef(({ addCpu }: AddCpu, ref) => {
 		architecture: "",
 		mbsocket: "",
 	});
-	const [showAddForm, setShowAddForm] = useState<boolean>(false);
 
-	useImperativeHandle(ref, () => ({
-		toggleVisibility: () => setShowAddForm(prev => !prev)
-	}));
-
-	const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+	// Handle the add form submit
+	const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
-		addCpu({
+
+		// Add the CPU
+		const response = await addCpu({
 			manufacturer: cpuSpecs.manufacturer.trim(),
 			model: cpuSpecs.model.trim(),
 			cores: cpuSpecs.cores,
@@ -50,17 +50,22 @@ const AddCpuForm = forwardRef(({ addCpu }: AddCpu, ref) => {
 			mbsocket: cpuSpecs.mbsocket.trim()
 		});
 
-		setCpuSpecs({
-			manufacturer: "",
-			model: "",
-			cores: 0,
-			threads: 0,
-			cache: 0,
-			baseclock: 0,
-			boostclock: 0,
-			architecture: "",
-			mbsocket: "",
-		});
+		// If the CPU was successfully added, close the form and clear the input data
+		if (response) {
+			setCpuSpecs({
+				manufacturer: "",
+				model: "",
+				cores: 0,
+				threads: 0,
+				cache: 0,
+				baseclock: 0,
+				boostclock: 0,
+				architecture: "",
+				mbsocket: "",
+			});
+
+			setShowAddForm(false);
+		}
 	}
 
 	return (
@@ -169,6 +174,4 @@ const AddCpuForm = forwardRef(({ addCpu }: AddCpu, ref) => {
 			</form>
 		</div>
 	)
-});
-
-export default AddCpuForm;
+}

@@ -1,5 +1,5 @@
 // React
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 
 // Components
 import CpuList from './components/CpuList';
@@ -27,8 +27,7 @@ export default function App() {
   const [error, setError] = useState<string>("");
   const [showAll, setShowAll] = useState<boolean>(false); // Controls the visibility of all tables
   const [searchTerm, setSearchTerm] = useState<string>("");
-
-  const cpuFormRef = useRef();
+  const [showAddForm, setShowAddForm] = useState<boolean>(false);
 
   // Fetch the initial CPUs data
   useEffect(() => {
@@ -50,33 +49,38 @@ export default function App() {
   }, []);
 
   // Add a new CPU using the data from the add form
-  const addCpu = (cpuObject: CpuInputType): void => {
-    if (
-        cpuObject.manufacturer === '' ||
-        cpuObject.model === '' ||
+  async function addCpu(cpuObject: CpuInputType): Promise<boolean> {
+    try {
+      // Check if the data is valid before sending it to the server
+      if (
+        cpuObject.manufacturer === "" ||
+        cpuObject.model === "" ||
         cpuObject.cores < 1 ||
         cpuObject.threads < 1 ||
         cpuObject.cache < 0.01 ||
-        cpuObject.baseclock < 0.1 ||
-        cpuObject.boostclock < 0.1 ||
-        cpuObject.architecture === '' ||
-        cpuObject.mbsocket === ''
+        cpuObject.baseclock < 0.01 ||
+        cpuObject.boostclock < 0.01 ||
+        cpuObject.architecture === "" ||
+        cpuObject.mbsocket === ""
       ) {
-      alert("Invalid CPU data");
-      return;
-    }
+        alert("Invalid CPU data");
+        return false;
+      }
 
-    cpuService
-      .create(cpuObject)
-      .then(returnedObject => {
-        setCpus((prevCpus) => [...prevCpus, returnedObject]); // Functional update for state
-        console.log("CPU Specs Submitted:", returnedObject);
-        alert(`${returnedObject.manufacturer} ${returnedObject.model} was added!`);
-        cpuFormRef.current.toggleVisibility();
-      })
-      .catch (_exception => {
-        alert("Failed to add new CPU");
-      })
+      // Create a new object through the axios route
+      const returnedObject = await cpuService.create(cpuObject);
+
+      // Update the Web UI to contain the new object
+      setCpus((prevCpus) => [...prevCpus, returnedObject]); // Functional update for state
+      
+      alert(`${returnedObject.manufacturer} ${returnedObject.model} was added!`);
+
+      // If successful, return a confirmation variable
+      return true;
+    } catch (_err: unknown) {
+      alert("Failed to add new CPU");
+      return false;
+    }
   };
 
   // Remove a CPU from the list
@@ -129,7 +133,8 @@ export default function App() {
 
         <AddCpuForm 
           addCpu={addCpu}
-          ref={cpuFormRef}
+          showAddForm={showAddForm}
+          setShowAddForm={setShowAddForm}
         />
 
         <SearchBar
