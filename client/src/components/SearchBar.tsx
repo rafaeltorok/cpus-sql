@@ -7,7 +7,7 @@ import "../styles/searchBar.css";
 // TypeScript types
 interface SearchBarProps {
   searchTerm: string;
-  setSearchTerm: (searchTerm: string) => void;
+  setSearchTerm: React.Dispatch<React.SetStateAction<string>>;
 }
 
 // Component
