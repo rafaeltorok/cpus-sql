@@ -5,8 +5,8 @@ import cors from "cors";
 import errorHandler from "./middleware/errorHandler.js";
 
 // Routes
-import cpusRouter from "./controllers/cpus";
-import healthRouter from "./controllers/health";
+import cpusRouter from "./controllers/cpus.js";
+import healthRouter from "./controllers/health.js";
 
 const app = express();
 
