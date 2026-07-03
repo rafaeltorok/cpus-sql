@@ -95,6 +95,7 @@ cpusRouter.post(
 cpusRouter.put(
   "/:id",
   validateId,
+  cpuFinder,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const {
@@ -123,14 +124,7 @@ cpusRouter.put(
         return res.status(400).send("Invalid input data");
       }
 
-      const updateCpu = await Cpu.findByPk(req.params.id);
-
-      // Checks if the item with the id exists
-      if (!updateCpu) {
-        return res.status(404).json({ error: "CPU not found" });
-      }
-
-      await updateCpu.update({
+      await req.cpu.update({
         manufacturer,
         model,
         cores,
@@ -142,7 +136,7 @@ cpusRouter.put(
         mbsocket,
       });
 
-      return res.status(200).json(updateCpu.toJSON());
+      return res.status(200).json(req.cpu.toJSON());
     } catch (err: unknown) {
       next(err);
     }
@@ -153,26 +147,17 @@ cpusRouter.put(
 cpusRouter.delete(
   "/:id",
   validateId,
+  cpuFinder,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const cpuToDelete = await Cpu.findByPk(req.params.id);
-
-      if (!cpuToDelete) {
-        return res.status(404).json({ error: "CPU not found" });
-      }
-
       // Remove the CPU
-      const removedObjects = await Cpu.destroy({
+      await Cpu.destroy({
         where: {
-          id: req.params.id,
+          id: req.cpu.id,
         },
       });
 
-      if (removedObjects === 1) {
-        res.status(204).end();
-      } else {
-        res.status(404).end();
-      }
+      res.status(204).end();
     } catch (err: unknown) {
       next(err);
     }
