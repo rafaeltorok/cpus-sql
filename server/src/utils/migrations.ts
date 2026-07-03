@@ -3,11 +3,11 @@ import { Umzug, SequelizeStorage } from "umzug";
 
 const migrationConf = {
   migrations: {
-    glob: "migrations/*.ts"
+    glob: "migrations/*.ts",
   },
   storage: new SequelizeStorage({ sequelize, tableName: "migrations" }),
   context: sequelize.getQueryInterface(),
-  logger: console
+  logger: console,
 };
 
 export async function runMigrations() {
@@ -22,7 +22,7 @@ export async function runMigrations() {
 
 export async function rollbackMigration() {
   await sequelize.authenticate();
-  
+
   const migrator = new Umzug(migrationConf);
   await migrator.down();
 }

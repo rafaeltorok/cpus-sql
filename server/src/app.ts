@@ -11,10 +11,12 @@ import healthRouter from "./controllers/health";
 const app = express();
 
 app.use(express.json());
-app.use(cors({
-  origin: 'http://localhost:5173',
-  methods: ['GET', 'POST', 'PUT', 'DELETE']
-}));
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+  }),
+);
 app.use("/api/cpus", cpusRouter);
 app.use("/api/health", healthRouter);
 

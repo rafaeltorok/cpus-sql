@@ -35,11 +35,11 @@ export async function up({ context: queryInterface }: MigrationContext) {
       allowNull: false,
       validate: {
         isInt: {
-          msg: "Invalid core amount"
+          msg: "Invalid core amount",
         },
         min: {
           args: [1],
-          msg: "Invalid amount of cores"
+          msg: "Invalid amount of cores",
         },
         notNull: {
           msg: "Cores is required",
@@ -51,11 +51,11 @@ export async function up({ context: queryInterface }: MigrationContext) {
       allowNull: false,
       validate: {
         isInt: {
-          msg: "Invalid thread amount"
+          msg: "Invalid thread amount",
         },
         min: {
           args: [1],
-          msg: "Invalid amount of threads"
+          msg: "Invalid amount of threads",
         },
         notNull: {
           msg: "Threads is required",
@@ -67,11 +67,11 @@ export async function up({ context: queryInterface }: MigrationContext) {
       allowNull: false,
       validate: {
         isFloat: {
-          msg: "Invalid cache format"
+          msg: "Invalid cache format",
         },
         min: {
           args: [1],
-          msg: "Invalid cache amount"
+          msg: "Invalid cache amount",
         },
         notNull: {
           msg: "Cache is required",
@@ -83,11 +83,11 @@ export async function up({ context: queryInterface }: MigrationContext) {
       allowNull: false,
       validate: {
         isFloat: {
-          msg: "Invalid core clock format"
+          msg: "Invalid core clock format",
         },
         min: {
           args: [1],
-          msg: "Invalid clock speed"
+          msg: "Invalid clock speed",
         },
         notNull: {
           msg: "Base Clock is required",
@@ -99,11 +99,11 @@ export async function up({ context: queryInterface }: MigrationContext) {
       allowNull: false,
       validate: {
         isFloat: {
-          msg: "Invalid core clock format"
+          msg: "Invalid core clock format",
         },
         min: {
           args: [1],
-          msg: "Invalid clock speed"
+          msg: "Invalid clock speed",
         },
         notNull: {
           msg: "Boost Clock is required",
