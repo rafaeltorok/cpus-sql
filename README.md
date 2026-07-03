@@ -3,8 +3,10 @@
 ## Table of Contents
 
 - [About](#about)
+- [ENV variables](#env-variables)
 - [Setup](#setup)
 - [Usage](#usage)
+- [Docker](#docker)
 - [CRUD Operations](#crud-operations)
 
 
@@ -14,6 +16,15 @@ A React frontend with an Express + Sequelize server fullstack application. Build
 CPUs SQL displays a list with your favorite CPUs specifications, you can add, remove and customize your own personal list of processors.
 
 <img src="./img/web-ui.png" alt="CPUs SQL Web UI" width="400"/>
+
+
+## ENV variables
+
+The following variables are required inside of `./server/.env`
+```conf
+DATABASE_URL=postgres://<username>:<password>@<hostname>:<port>/<database_name>
+PORT=3001
+```
 
 
 ## Setup
@@ -66,6 +77,53 @@ CPUs SQL displays a list with your favorite CPUs specifications, you can add, re
 
 
 
+## Docker
+
+### Development mode
+
+- Supports hot reloading of files for both Frontend and Backend.
+
+- Uses Nginx as a reverse proxy.
+
+Start the Docker Compose orchestration
+```bash
+docker compose -f ./docker-compose.dev.yml up --build
+```
+
+- Web UI access on http://localhost:8000
+
+- API requests on http://localhost:8000/api
+
+Cleanup
+```bash
+docker compose -f ./docker-compose.dev.yml down -v
+```
+
+#### Database access via Client UI
+
+Access the database with the following credentials
+
+- Username: `admin`
+- Password: `admin`
+- Database: `data`
+- Port: `5434`
+- **Disable** the SSL connection if using tools such as **pgAdmin**
+
+#### Database access via psql
+
+Enter the container
+```bash
+docker exec -it cpus-sql-dev-db bash
+```
+
+Access psql
+```bash
+psql -U admin -W -d data
+```
+
+- Password: `admin`
+
+
 ## CRUD operations
 
 - GET
@@ -92,4 +150,3 @@ CPUs SQL displays a list with your favorite CPUs specifications, you can add, re
   ```
   curl -X DELETE http://localhost:3001/api/cpus/<id>'
   ```
-
