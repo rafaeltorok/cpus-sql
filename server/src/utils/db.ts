@@ -4,7 +4,6 @@ dotenv.config();
 import { DATABASE_URL } from "./config.js";
 
 // TypeScript types
-
 let sequelize: Sequelize;
 
 if (process.env.DATABASE_SSL === "true") {
