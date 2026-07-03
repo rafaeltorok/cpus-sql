@@ -1,13 +1,12 @@
 import dotenv from "dotenv";
 dotenv.config();
 
-import type { Request, Response, NextFunction } from "express";
+import type { Request, Response } from "express";
 
 export default function errorHandler(
   err: unknown,
   _req: Request,
   res: Response,
-  next: NextFunction,
 ) {
   if (err instanceof Error) {
     if (err.name === "SequelizeUniqueConstraintError") {
