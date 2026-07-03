@@ -1,5 +1,6 @@
 import app from "./app.js";
 import sequelize from "./utils/db.js";
+import { runMigrations } from "./utils/migrations.js";
 
 // Utils
 import { PORT } from "./utils/config.js";
@@ -8,7 +9,7 @@ import { PORT } from "./utils/config.js";
 async function start() {
   try {
     await sequelize.authenticate();
-    await sequelize.sync();
+    await runMigrations();
 
     app.listen(PORT, () => {
       console.log(`Server running on port ${PORT}`);
