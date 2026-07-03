@@ -34,7 +34,7 @@ services:
       - ./server:/usr/src/app/server
       - server_node_modules:/usr/src/app/server/node_modules
     environment:
-      DATABASE_URL: postgres://admin:admin@dev-postgres:5432/data
+      DATABASE_URL: postgres://admin:admin@dev-db:5432/data
       PORT: 3001
       DATABASE_SSL: false
     healthcheck:
@@ -74,7 +74,7 @@ services:
     image: nginx:stable-alpine
     container_name: cpus-sql-dev-nginx
     ports:
-      - 8080:80
+      - 8000:80
     networks:
       - dev-network
     volumes:
