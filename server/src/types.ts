@@ -1,5 +1,4 @@
-type CpuType = {
-  id?: number;
+export interface NewCpu {
   manufacturer: string;
   model: string;
   cores: number;
@@ -9,13 +8,8 @@ type CpuType = {
   boostclock: number;
   architecture: string;
   mbsocket: string;
-};
+}
 
-declare global {
-  namespace Express {
-    export interface Request {
-      cpu: CpuType;
-      id?: number;
-    }
-  }
+export interface CpuType extends NewCpu {
+  id: number;
 }
