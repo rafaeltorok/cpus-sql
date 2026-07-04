@@ -5,13 +5,14 @@ import dotenv from "dotenv";
 dotenv.config();
 
 // TypeScript types
-import type { Request, Response } from "express";
+import type { NextFunction, Request, Response } from "express";
 
 // Middleware
 export default function errorHandler(
   err: unknown,
   _req: Request,
   res: Response,
+  _next: NextFunction
 ) {
   if (err instanceof Error) {
     if (process.env.NODE_ENV !== "test") {
