@@ -9,6 +9,7 @@ import validateId from "../middleware/validators/validateId.js";
 
 // TypeScript types
 import type { Request, Response, NextFunction } from "express";
+import type { CpuType, CpuInputType } from "../types/types.js";
 
 const cpusRouter = express.Router();
 
@@ -32,7 +33,7 @@ cpusRouter.get(
   "/:id",
   validateId,
   cpuFinder,
-  async (req: Request, res: Response, next: NextFunction) => {
+  (req: Request, res: Response, next: NextFunction) => {
     try {
       return res.status(200).json(req.cpu);
     } catch (err: unknown) {
@@ -56,7 +57,7 @@ cpusRouter.post(
         boostclock,
         architecture,
         mbsocket,
-      } = req.body;
+      } = req.body as CpuInputType;
 
       if (
         !manufacturer ||
@@ -108,7 +109,9 @@ cpusRouter.put(
         boostclock,
         architecture,
         mbsocket,
-      } = req.body;
+      } = req.body as CpuInputType;
+
+      const cpuToUpdate: CpuType = req.cpu;
 
       if (
         !manufacturer ||
@@ -124,7 +127,7 @@ cpusRouter.put(
         return res.status(400).send("Invalid input data");
       }
 
-      await req.cpu.update({
+      await cpuToUpdate.update({
         manufacturer,
         model,
         cores,
@@ -136,7 +139,7 @@ cpusRouter.put(
         mbsocket,
       });
 
-      return res.status(200).json(req.cpu.toJSON());
+      return res.status(200).json(req.cpu);
     } catch (err: unknown) {
       next(err);
     }
