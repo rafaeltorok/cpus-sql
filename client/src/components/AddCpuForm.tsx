@@ -8,10 +8,10 @@ import FormRow from './FormRow';
 import "../styles/addCpuForm.css";
 
 // TypeScript types
-import type { CpuInputType } from '../types/types';
+import type { NewCpu } from '../types/types';
 
 interface AddCpuFormProps {
-	addCpu: (cpu: CpuInputType) => Promise<boolean>;
+	addCpu: (cpu: NewCpu) => Promise<boolean>;
 	showAddForm: boolean;
 	setShowAddForm: React.Dispatch<React.SetStateAction<boolean>>;
 };
@@ -21,7 +21,7 @@ type Event = React.ChangeEvent<HTMLInputElement>;
 
 // Component
 export default function AddCpuForm({ addCpu, showAddForm, setShowAddForm }: AddCpuFormProps) {
-	const [cpuSpecs, setCpuSpecs] = useState<CpuInputType>({
+	const [cpuSpecs, setCpuSpecs] = useState<NewCpu>({
 		manufacturer: "",
 		model: "",
 		cores: 0,

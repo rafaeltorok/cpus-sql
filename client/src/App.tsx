@@ -11,7 +11,7 @@ import SearchBar from './components/SearchBar';
 import cpuService from './services/cpus';
 
 // TypeScript types
-import type { CpuType, CpuInputType } from './types/types';
+import type { CpuType, NewCpu } from './types/types';
 
 // Styles
 import './styles/App.css';
@@ -49,7 +49,7 @@ export default function App() {
   }, []);
 
   // Add a new CPU using the data from the add form
-  async function addCpu(cpuObject: CpuInputType): Promise<boolean> {
+  async function addCpu(cpuObject: NewCpu): Promise<boolean> {
     try {
       // Check if the data is valid before sending it to the server
       if (
