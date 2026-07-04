@@ -14,6 +14,10 @@ export default function errorHandler(
   res: Response,
 ) {
   if (err instanceof Error) {
+    if (process.env.NODE_ENV !== "test") {
+      console.error(err); // Log on the server for debugging
+    }
+
     if (err instanceof UniqueConstraintError) {
       return res.status(400).json({ error: "CPU must be unique" });
     }
