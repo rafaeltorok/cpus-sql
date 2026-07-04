@@ -54,17 +54,26 @@ PORT=3001
 
 ### Backend
 
-- Production mode (serves a static build of the frontend)
-  ```bash
-  npm run start
-  ```
+- **Production** mode (serves a static build of the frontend)
 
-- Development mode (enables hot reloading of files)
+  - **Compile** the backend code into JavaScript
+    ```bash
+    npm run tsc
+    ```
+  
+  - **Start** the server
+    ```bash
+    npm run start
+    ```
+
+  - Access the Web UI on http://localhost:3001
+
+- **Development** mode (enables hot reloading of files)
   ```bash
   npm run dev
   ```
 
-- HTTP requests on http://localhost:3001
+- HTTP requests on http://localhost:3001/api
 
 ### Frontend
 
