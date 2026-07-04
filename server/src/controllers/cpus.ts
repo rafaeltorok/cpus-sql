@@ -9,7 +9,6 @@ import validateId from "../middleware/validators/validateId.js";
 
 // TypeScript types
 import type { Request, Response, NextFunction } from "express";
-import type { CpuType, CpuInputType } from "../types/types.js";
 
 const cpusRouter = express.Router();
 
@@ -57,7 +56,7 @@ cpusRouter.post(
         boostclock,
         architecture,
         mbsocket,
-      } = req.body as CpuInputType;
+      } = req.body as CpuType;
 
       if (
         !manufacturer ||
@@ -109,7 +108,7 @@ cpusRouter.put(
         boostclock,
         architecture,
         mbsocket,
-      } = req.body as CpuInputType;
+      } = req.body as CpuType;
 
       const cpuToUpdate: CpuType = req.cpu;
 
