@@ -4,11 +4,11 @@ import express from "express";
 import Cpu from "../models/cpu.js";
 
 // Middleware
-import cpuFinder from "../middleware/finder.js";
 import validateId from "../middleware/validators/validateId.js";
 
 // TypeScript types
 import type { Request, Response, NextFunction } from "express";
+import type { NewCpu } from "../types.js";
 
 const cpusRouter = express.Router();
 
@@ -31,10 +31,15 @@ cpusRouter.get(
 cpusRouter.get(
   "/:id",
   validateId,
-  cpuFinder,
-  (req: Request, res: Response, next: NextFunction) => {
+  async (req: Request<{ id: string }>, res: Response, next: NextFunction) => {
     try {
-      return res.status(200).json(req.cpu);
+      const cpu = await Cpu.findByPk(req.params.id);
+
+      if (!cpu) {
+        return res.status(404).end();
+      }
+
+      return res.status(200).json(cpu);
     } catch (err: unknown) {
       next(err);
     }
@@ -44,7 +49,7 @@ cpusRouter.get(
 // POST a new item
 cpusRouter.post(
   "/",
-  async (req: Request, res: Response, next: NextFunction) => {
+  async (req: Request<unknown, unknown, NewCpu>, res: Response, next: NextFunction) => {
     try {
       const {
         manufacturer,
@@ -56,7 +61,7 @@ cpusRouter.post(
         boostclock,
         architecture,
         mbsocket,
-      } = req.body as CpuType;
+      } = req.body;
 
       if (
         !manufacturer ||
@@ -95,8 +100,7 @@ cpusRouter.post(
 cpusRouter.put(
   "/:id",
   validateId,
-  cpuFinder,
-  async (req: Request, res: Response, next: NextFunction) => {
+  async (req: Request<{ id: string }, unknown, NewCpu>, res: Response, next: NextFunction) => {
     try {
       const {
         manufacturer,
@@ -108,9 +112,13 @@ cpusRouter.put(
         boostclock,
         architecture,
         mbsocket,
-      } = req.body as CpuType;
+      } = req.body;
 
-      const cpuToUpdate: CpuType = req.cpu;
+      const cpuToUpdate = await Cpu.findByPk(req.params.id);
+
+      if (!cpuToUpdate) {
+        return res.status(404).end();
+      }
 
       if (
         !manufacturer ||
@@ -138,7 +146,7 @@ cpusRouter.put(
         mbsocket,
       });
 
-      return res.status(200).json(req.cpu);
+      return res.status(200).json(cpuToUpdate);
     } catch (err: unknown) {
       next(err);
     }
@@ -149,17 +157,20 @@ cpusRouter.put(
 cpusRouter.delete(
   "/:id",
   validateId,
-  cpuFinder,
-  async (req: Request, res: Response, next: NextFunction) => {
+  async (req: Request<{ id: string }>, res: Response, next: NextFunction) => {
     try {
       // Remove the CPU
-      await Cpu.destroy({
+      const removedObjects = await Cpu.destroy({
         where: {
-          id: req.cpu.id,
+          id: req.params.id,
         },
       });
 
-      res.status(204).end();
+      if (removedObjects === 1) {
+        return res.status(204).end();
+      } else {
+        return res.status(404).end();
+      }
     } catch (err: unknown) {
       next(err);
     }
