@@ -11,9 +11,11 @@ type CpuType = {
   mbsocket: string;
 };
 
-
-declare namespace Express {
-   export interface Request {
-      cpu: CpuType
-   }
+declare global {
+  namespace Express {
+    export interface Request {
+      cpu: CpuType;
+      id?: number;
+    }
+  }
 }
