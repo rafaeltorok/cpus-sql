@@ -30,6 +30,7 @@ export default function Cpu({ cpu, onDelete, showAll }: CpuProps) {
 
 	// Sync individual state with global "Show All" toggle
 	useEffect(() => {
+		// eslint-disable-next-line react-hooks/set-state-in-effect
 		setShowBody(showAll);
 	}, [showAll]);
 
