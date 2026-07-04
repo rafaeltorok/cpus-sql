@@ -15,6 +15,16 @@
 A React frontend with an Express + Sequelize server fullstack application. Build with TypeScript.
 CPUs SQL displays a list with your favorite CPUs specifications, you can add, remove and customize your own personal list of processors.
 
+- [Live demo available on Render⇗](https://cpus-sql.onrender.com)
+
+- Container image Available on the Docker Hub
+  ```bash
+  docker pull rafaeltorok/cpus-sql:latest
+  ```
+
+
+### Screenshots
+
 <img src="./img/web-ui.png" alt="CPUs SQL Web UI" width="400"/>
 
 
@@ -88,7 +98,29 @@ PORT=3001
 
 ## Docker
 
-### Development mode
+### Production build
+
+- Containerized build of the compiled backend server code.
+
+- Serves a static build of the frontend through Express.
+
+Navigate to the server folder
+```bash
+cd ./server
+```
+
+Build the Docker image
+```bash
+docker build -t cpus-sql .
+```
+
+Start the container
+```bash
+docker run --name cpus-sql -p 3001:3001 --env-file=./.env cpus-sql
+```
+
+
+### Development Compose orchestration
 
 - Supports hot reloading of files for both Frontend and Backend.
 
