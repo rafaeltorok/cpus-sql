@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "tsc": "tsc",
-    "start": "cross-env NODE_ENV=production node ./build/index.js",
+    "start": "cross-env NODE_ENV=production node ./build/src/index.js",
     "dev": "tsx watch ./src/index.ts",
     "start:test": "cross-env NODE_ENV=test tsx watch ./src/index.ts",
     "lint": "eslint .",
