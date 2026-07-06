@@ -50,8 +50,8 @@ jobs:
           push: ${{ github.event_name == 'push' }}
           file: ./server/prod.Dockerfile
           tags: |
-            ${{ secrets.DOCKER_USERNAME }}/image_name:latest
-            ${{ secrets.DOCKER_USERNAME }}/image_name:${{ needs.tag-release.outputs.version }}
+            ${{ secrets.DOCKER_USERNAME }}/cpus-sql:latest
+            ${{ secrets.DOCKER_USERNAME }}/cpus-sql:${{ needs.tag-release.outputs.version }}
 
   deploy-to-render:
     if: ${{ github.event_name == 'push' }}
