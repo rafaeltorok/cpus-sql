@@ -5,7 +5,7 @@ on:
     branches: [ main ]
 
 jobs:
-  tag_release:
+  tag-release:
     if: ${{ github.event_name == 'push' && !contains(join(github.event.commits.*.message), '#no-release')}}
     runs-on: ubuntu-latest
     permissions:
@@ -29,7 +29,7 @@ jobs:
           MINOR_STRING_TOKEN: '#minor'
 
   build-and-push:
-    needs: tag_release
+    needs: tag-release
     runs-on: ubuntu-latest
     permissions:
       contents: read
