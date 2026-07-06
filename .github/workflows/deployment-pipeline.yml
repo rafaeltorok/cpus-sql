@@ -31,6 +31,9 @@ jobs:
   build-and-push:
     needs: tag-release
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./server
     permissions:
       contents: read
       packages: write
@@ -48,7 +51,7 @@ jobs:
         uses: docker/build-push-action@v7
         with:
           push: ${{ github.event_name == 'push' }}
-          file: ./server/prod.Dockerfile
+          file: ./prod.Dockerfile
           tags: |
             ${{ secrets.DOCKER_USERNAME }}/cpus-sql:latest
             ${{ secrets.DOCKER_USERNAME }}/cpus-sql:${{ needs.tag-release.outputs.version }}
