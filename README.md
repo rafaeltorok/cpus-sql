@@ -8,6 +8,7 @@
 - [Usage](#usage)
 - [Docker](#docker)
 - [CRUD Operations](#crud-operations)
+- [Tests](#tests)
 
 
 ## About
@@ -191,3 +192,29 @@ psql -U admin -W -d data
   ```
   curl -X DELETE http://localhost:3001/api/cpus/<id>'
   ```
+
+
+## Tests
+
+### Integration tests
+
+Features:
+
+- Implemented using the Node test runner with Supertest.
+
+**Note: the test runner requires the code to be compiled inside of the `/build` folder.**
+
+Enter the server folder
+```bash
+cd ./server
+```
+
+Compile the TypeScript code into JavaScript
+```bash
+npm run tsc
+```
+
+Run the tests
+```bash
+npm run test
+```
