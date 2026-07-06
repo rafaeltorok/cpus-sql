@@ -1,0 +1,62 @@
+name: Deployment Pipeline
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  tag_release:
+    if: ${{ github.event_name == 'push' && !contains(join(github.event.commits.*.message), '#no-release')}}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    outputs:
+      version: ${{ steps.tag_version.outputs.new_tag }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Bump version and push tag
+        uses: anothrNick/github-tag-action@1.75.0
+        id: tag_version
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG_PREFIX: v
+          DEFAULT_BUMP: patch
+          WITH_V: true
+          MAJOR_STRING_TOKEN: '#major'
+          MINOR_STRING_TOKEN: '#minor'
+
+  build-and-push:
+    needs: tag_release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Log in to Docker Hub
+        if: ${{ github.event_name == 'push' }}
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          push: ${{ github.event_name == 'push' }}
+          file: ./server/prod.Dockerfile
+          tags: |
+            ${{ secrets.DOCKER_USERNAME }}/image_name:latest
+            ${{ secrets.DOCKER_USERNAME }}/image_name:${{ needs.tag-release.outputs.version }}
+
+  deploy-to-render:
+    if: ${{ github.event_name == 'push' }}
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to Render
+        run: curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK }}"
