@@ -67,6 +67,17 @@ const processors: CpuType[] = [
     architecture: "Comet Lake",
     mbsocket: "1200"
   },
+  {
+    manufacturer: "Intel",
+    model: "Core i9-10900K",
+    cores: 10,
+    threads: 20,
+    cache: 22.5,
+    baseclock: 3.7,
+    boostclock: 5.3,
+    architecture: "Comet Lake",
+    mbsocket: "1200"
+  }
 ];
 
 export default processors;
