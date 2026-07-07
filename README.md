@@ -202,19 +202,16 @@ Features:
 
 - Implemented using the Node test runner with Supertest.
 
-**Note: the test runner requires the code to be compiled inside of the `/build` folder.**
+**Note: the Node test runner uses the compiled code in `/build`.**
 
 Enter the server folder
 ```bash
 cd ./server
 ```
 
-Compile the TypeScript code into JavaScript
-```bash
-npm run tsc
-```
-
 Run the tests
 ```bash
 npm run test
 ```
+
+- This command will automatically **compile** the code before running the test suites.
