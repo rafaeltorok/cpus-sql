@@ -25,7 +25,6 @@ export default tseslint.config({
     "coverage/**",
     "node_modules/**",
     "**/*.d.ts",
-    "tests/**",
   ],
 
   languageOptions: {
