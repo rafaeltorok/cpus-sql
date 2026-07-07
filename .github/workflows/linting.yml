@@ -3,6 +3,8 @@ name: ESLint check
 on:
   push:
     branches: [ main, testing ]
+  pull_request:
+    branches: [ main, testing ]
 
 jobs:
   server-linting:
