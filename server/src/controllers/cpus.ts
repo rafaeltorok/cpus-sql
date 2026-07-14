@@ -5,6 +5,7 @@ import Cpu from "../models/cpu.js";
 
 // Middleware
 import validateId from "../middleware/validators/validateId.js";
+import validateCpu from "../middleware/validators/cpuValidator.js";
 
 // TypeScript types
 import type { Request, Response, NextFunction } from "express";
@@ -49,6 +50,7 @@ cpusRouter.get(
 // POST a new item
 cpusRouter.post(
   "/",
+  validateCpu,
   async (req: Request<unknown, unknown, NewCpu>, res: Response, next: NextFunction) => {
     try {
       const {
@@ -100,6 +102,7 @@ cpusRouter.post(
 cpusRouter.put(
   "/:id",
   validateId,
+  validateCpu,
   async (req: Request<{ id: string }, unknown, NewCpu>, res: Response, next: NextFunction) => {
     try {
       const {
