@@ -10,7 +10,7 @@
   border-style: double;
 }
 
-.cpu-data-table th, 
+.cpu-data-table th,
 .cpu-data-table td {
   border: 0.1rem solid black;
   border-style: groove;

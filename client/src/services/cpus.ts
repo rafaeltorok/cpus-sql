@@ -1,7 +1,7 @@
-import axios from 'axios';
+import axios from "axios";
 
 // TypeScript types
-import type { NewCpu, CpuType } from '../types/types';
+import type { NewCpu, CpuType } from "../types/types";
 
 const baseUrl = "/api/cpus";
 

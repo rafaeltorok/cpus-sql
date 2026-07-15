@@ -1,26 +1,25 @@
 // React
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
 // Components
-import CpuList from './components/CpuList';
-import AddCpuForm from './components/AddCpuForm';
-import PageIndex from './components/PageIndex';
-import SearchBar from './components/SearchBar';
+import CpuList from "./components/CpuList";
+import AddCpuForm from "./components/AddCpuForm";
+import PageIndex from "./components/PageIndex";
+import SearchBar from "./components/SearchBar";
 
 // Services
-import cpuService from './services/cpus';
+import cpuService from "./services/cpus";
 
 // TypeScript types
-import type { CpuType, NewCpu } from './types/types';
+import type { CpuType, NewCpu } from "./types/types";
 
 // Styles
-import './styles/App.css';
-
+import "./styles/App.css";
 
 // Main App component
 export default function App() {
   // Set the API server URL
-  const baseUrl = '/api/cpus';
+  const baseUrl = "/api/cpus";
 
   // React states
   const [cpus, setCpus] = useState<CpuType[]>([]);
@@ -34,7 +33,8 @@ export default function App() {
     const fetchData = async () => {
       try {
         const response = await fetch(baseUrl);
-        if (!response.ok) throw new Error('Failed to fetch data from the server');
+        if (!response.ok)
+          throw new Error("Failed to fetch data from the server");
         const data: CpuType[] = await response.json();
         setCpus(data);
       } catch (err: unknown) {
@@ -44,7 +44,7 @@ export default function App() {
           setError(String(err));
         }
       }
-    }
+    };
     fetchData();
   }, []);
 
@@ -72,8 +72,10 @@ export default function App() {
 
       // Update the Web UI to contain the new object
       setCpus((prevCpus) => [...prevCpus, returnedObject]); // Functional update for state
-      
-      alert(`${returnedObject.manufacturer} ${returnedObject.model} was added!`);
+
+      alert(
+        `${returnedObject.manufacturer} ${returnedObject.model} was added!`,
+      );
 
       // If successful, return a confirmation variable
       return true;
@@ -81,42 +83,49 @@ export default function App() {
       alert("Failed to add new CPU");
       return false;
     }
-  };
+  }
 
   // Remove a CPU from the list
   const deleteCpu = (id: number, manufacturer: string, model: string) => {
-    const confirmDeletion = window.confirm(`Remove ${manufacturer} ${model} from the list?`);
+    const confirmDeletion = window.confirm(
+      `Remove ${manufacturer} ${model} from the list?`,
+    );
 
     if (confirmDeletion) {
-      cpuService.remove(id)
+      cpuService
+        .remove(id)
         .then(() => {
           // Remove the CPU from the state
-          setCpus(cpus.filter(cpu => cpu.id !== id));
+          setCpus(cpus.filter((cpu) => cpu.id !== id));
         })
-        .catch(_exception => {
+        .catch((_exception) => {
           alert("Failed to remove CPU");
         });
     }
-  }
-  
+  };
+
   // Scroll the page to the respective data table
   function scrollToIndex(cpuTableId: string): void {
-    const element = document.getElementById('page-index-container');
+    const element = document.getElementById("page-index-container");
     if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+      element.scrollIntoView({ behavior: "smooth" });
 
       const cpuTable = document.getElementById(cpuTableId);
-      const showAllButton = document.getElementById('show-all-button') as HTMLButtonElement;
+      const showAllButton = document.getElementById(
+        "show-all-button",
+      ) as HTMLButtonElement;
       let hideButton;
 
       if (cpuTable) {
-        hideButton = cpuTable.querySelector('.show-hide-button') as HTMLButtonElement;
+        hideButton = cpuTable.querySelector(
+          ".show-hide-button",
+        ) as HTMLButtonElement;
       }
-      
+
       if (
-        hideButton && 
-        hideButton.textContent === 'Hide' && 
-        showAllButton.textContent === 'Show all data'
+        hideButton &&
+        hideButton.textContent === "Hide" &&
+        showAllButton.textContent === "Show all data"
       ) {
         hideButton.click();
       }
@@ -133,36 +142,21 @@ export default function App() {
   return (
     <>
       <div>
-        <h1 id='main-page-title'>CPU Manager</h1> {/* Add ref to the <h1> element */}
-
-        <AddCpuForm 
+        <h1 id="main-page-title">CPU Manager</h1>{" "}
+        {/* Add ref to the <h1> element */}
+        <AddCpuForm
           addCpu={addCpu}
           showAddForm={showAddForm}
           setShowAddForm={setShowAddForm}
         />
-
-        <SearchBar
-          searchTerm={searchTerm}
-          setSearchTerm={setSearchTerm}
-        />
-        
-        <PageIndex
-          cpusData={filteredCpus}
-        />
-        
-        <div 
-          id='show-all-button'
-          className='button-area'
-        >
-          <button
-            onClick={() => setShowAll((prev) => !prev)}
-          >
+        <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+        <PageIndex cpusData={filteredCpus} />
+        <div id="show-all-button" className="button-area">
+          <button onClick={() => setShowAll((prev) => !prev)}>
             {showAll ? "Hide all data" : "Show all data"}
           </button>
         </div>
-        
         {error && <p>Error: {error}</p>}
-        
         {filteredCpus.length === 0 ? (
           <h2>No CPUs were found</h2>
         ) : (
@@ -175,5 +169,5 @@ export default function App() {
         )}
       </div>
     </>
-  )
+  );
 }

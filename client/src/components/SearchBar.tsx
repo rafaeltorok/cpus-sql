@@ -11,7 +11,10 @@ interface SearchBarProps {
 }
 
 // Component
-export default function SearchBar({ searchTerm, setSearchTerm }: SearchBarProps) {
+export default function SearchBar({
+  searchTerm,
+  setSearchTerm,
+}: SearchBarProps) {
   const [showSearch, setShowSearch] = useState(false);
 
   useEffect(() => {

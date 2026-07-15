@@ -22,7 +22,7 @@ const api = supertest(app);
 before(async () => {
   // Connect to the PostgreSQL database
   await setupDb();
-  
+
   // Clear all previous data
   await Cpu.truncate({ restartIdentity: true });
 
@@ -68,10 +68,12 @@ describe("the CPUs GET route", () => {
         .expect("Content-Type", /application\/json/);
 
       // Remove the id fields for each
-      const returnedList: CpuType[] = getResponse.body.map((processor: CpuType) => {
-        const { id, ...otherFields } = processor;
-        return otherFields;
-      });
+      const returnedList: CpuType[] = getResponse.body.map(
+        (processor: CpuType) => {
+          const { id, ...otherFields } = processor;
+          return otherFields;
+        },
+      );
 
       // Confirm all of the returned data is correct
       assert.deepStrictEqual(processors, returnedList);
@@ -85,7 +87,7 @@ describe("the CPUs GET route", () => {
 
       // Filter the correct processor form the returned list
       const returnedProcessor: CpuType = getResponse.body.find(
-        (processor: CpuType) => processor.model === "Core i9-10900K"
+        (processor: CpuType) => processor.model === "Core i9-10900K",
       );
 
       // Remove the id field from the response
@@ -93,7 +95,7 @@ describe("the CPUs GET route", () => {
 
       // Get the original data to be compared with
       const originalProcessor = processors.find(
-        (processor: CpuType) => processor.model === "Core i9-10900K"
+        (processor: CpuType) => processor.model === "Core i9-10900K",
       );
 
       // Confirm the values are correct
@@ -130,9 +132,7 @@ describe("the CPUs GET route", () => {
     });
 
     test("a non-existing id returns a proper status code", async () => {
-      await api
-        .get("/api/cpus/0")
-        .expect(404)
+      await api.get("/api/cpus/0").expect(404);
     });
 
     test("an invalid id format returns a proper error message", async () => {

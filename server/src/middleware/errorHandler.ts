@@ -12,7 +12,7 @@ export default function errorHandler(
   err: unknown,
   _req: Request,
   res: Response,
-  _next: NextFunction
+  _next: NextFunction,
 ) {
   if (err instanceof Error) {
     if (process.env.NODE_ENV !== "test") {

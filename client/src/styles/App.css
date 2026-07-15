@@ -4,12 +4,12 @@
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
-  font-family: 'digital-dreamers', 'sans-serif';
+  font-family: "digital-dreamers", "sans-serif";
 }
 
 @font-face {
-  font-family: 'digital-dreamers';
-  src: url('./fonts/DigitalDreamers-jy99.ttf') format('truetype');
+  font-family: "digital-dreamers";
+  src: url("./fonts/DigitalDreamers-jy99.ttf") format("truetype");
 }
 
 .button-area {
@@ -19,7 +19,6 @@
   border-radius: 1rem;
   box-sizing: border-box; /* Prevents the are to be wider than the others */
   margin-bottom: 2rem;
-  
 }
 
 .button-area button {
@@ -44,7 +43,7 @@ h1 {
 button {
   background-color: black;
   font-size: 1rem;
-  font-family: 'digital-dreamers';
+  font-family: "digital-dreamers";
   margin-top: 1rem;
   border-style: outset;
 }
@@ -52,7 +51,7 @@ button {
 button:active {
   background-color: black;
   font-size: 1rem;
-  font-family: 'digital-dreamers';
+  font-family: "digital-dreamers";
   margin-top: 1rem;
   color: #505050;
   border-style: inset;
@@ -63,14 +62,14 @@ button:active {
 }
 
 .intel-model-header {
-  color: #0068B5;
+  color: #0068b5;
 }
 
 [id^="amd-"] {
   border-color: rgba(186, 0, 0, 0.75); /* subtle transparent red */
 }
 
-[id^="intel-"]{
+[id^="intel-"] {
   border-color: rgba(0, 104, 181, 0.75); /* subtle transparent blue */
 }
 
@@ -85,7 +84,6 @@ button:active {
 [id^="intel-"] tbody td {
   border-color: rgba(0, 104, 181, 0.25);
 }
-
 
 @media only screen and (hover: none) and (pointer: coarse) {
   #root {

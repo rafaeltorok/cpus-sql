@@ -11,7 +11,9 @@ const validateId = [
   (req: Request, res: Response, next: NextFunction) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      const errorMessages: string[] = errors.array().map((error) => String(error.msg));
+      const errorMessages: string[] = errors
+        .array()
+        .map((error) => String(error.msg));
       return res.status(400).json({ error: errorMessages });
     }
     next();

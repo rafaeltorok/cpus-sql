@@ -10,7 +10,6 @@ interface FormRowProps {
 
 type Event = React.ChangeEvent<HTMLInputElement>;
 
-
 // Component
 export default function FormRow({
   id,

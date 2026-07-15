@@ -21,7 +21,7 @@ const processors: CpuType[] = [
     baseclock: 4.7,
     boostclock: 5.2,
     architecture: "Zen 5",
-    mbsocket: "AM5"
+    mbsocket: "AM5",
   },
   {
     manufacturer: "AMD",
@@ -32,7 +32,7 @@ const processors: CpuType[] = [
     baseclock: 4.2,
     boostclock: 5,
     architecture: "Zen 4",
-    mbsocket: "AM5"
+    mbsocket: "AM5",
   },
   {
     manufacturer: "Intel",
@@ -43,7 +43,7 @@ const processors: CpuType[] = [
     baseclock: 3.5,
     boostclock: 3.9,
     architecture: "Haswell",
-    mbsocket: "1150"
+    mbsocket: "1150",
   },
   {
     manufacturer: "Intel",
@@ -54,7 +54,7 @@ const processors: CpuType[] = [
     baseclock: 4,
     boostclock: 4.2,
     architecture: "Skylake",
-    mbsocket: "1151"
+    mbsocket: "1151",
   },
   {
     manufacturer: "Intel",
@@ -65,7 +65,7 @@ const processors: CpuType[] = [
     baseclock: 3.8,
     boostclock: 5.1,
     architecture: "Comet Lake",
-    mbsocket: "1200"
+    mbsocket: "1200",
   },
   {
     manufacturer: "Intel",
@@ -76,8 +76,8 @@ const processors: CpuType[] = [
     baseclock: 3.7,
     boostclock: 5.3,
     architecture: "Comet Lake",
-    mbsocket: "1200"
-  }
+    mbsocket: "1200",
+  },
 ];
 
 export default processors;

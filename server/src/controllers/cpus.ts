@@ -51,7 +51,11 @@ cpusRouter.get(
 cpusRouter.post(
   "/",
   validateCpu,
-  async (req: Request<unknown, unknown, NewCpu>, res: Response, next: NextFunction) => {
+  async (
+    req: Request<unknown, unknown, NewCpu>,
+    res: Response,
+    next: NextFunction,
+  ) => {
     try {
       const {
         manufacturer,
@@ -103,7 +107,11 @@ cpusRouter.put(
   "/:id",
   validateId,
   validateCpu,
-  async (req: Request<{ id: string }, unknown, NewCpu>, res: Response, next: NextFunction) => {
+  async (
+    req: Request<{ id: string }, unknown, NewCpu>,
+    res: Response,
+    next: NextFunction,
+  ) => {
     try {
       const {
         manufacturer,
