@@ -275,5 +275,28 @@ describe("POST /api/cpus", () => {
 			// Assert there is an error message within the response
 			assert.ok(postResponse.body.error.includes("Invalid core amount"));
 		});
+		
+		test("returns an error message with an undefined value", async () => {
+			const { cores, ...otherFields } = processors[0];
+			
+			// Get the initial list of processors
+			const initialProcessors = await getAmount();
+			
+			// Add a new processor
+			const postResponse = await api
+				.post("/api/cpus")
+				.send(otherFields)
+				.expect(400)
+				.expect("Content-Type", /application\/json/);
+
+			// Get the current list of processors
+			const currentProcessors = await getAmount();
+
+			// Confirm the amount of processors has not changed
+			assert.strictEqual(currentProcessors, initialProcessors);
+			
+			// Assert there is an error message within the response
+			assert.ok(postResponse.body.error.includes("Invalid core amount"));
+		});
 	});
 });
