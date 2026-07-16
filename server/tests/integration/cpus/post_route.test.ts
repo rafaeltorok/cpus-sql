@@ -20,7 +20,7 @@ import type { CpuType } from "../../../types/types.ts";
 const api = supertest(app);
 
 // Helper functions
-async function getAmount(): number {
+async function getAmount(): Promise<number> {
   const response = await api
     .get("/api/cpus")
     .expect(200)
@@ -119,7 +119,35 @@ describe("POST /api/cpus", () => {
       const { cache, ...otherFields } = postResponse.body;
 
       // Confirm the returned data is correct
-      assert.deepStrictEqual(originalProcessor.cache, cache);
+      assert.deepStrictEqual(originalProcessor?.cache, cache);
+    });
+
+    test("the min boundary values should be accepted", async () => {
+      // Add the min values for all fields
+      const cpu = {
+        ...processors[0],
+        cores: 1,
+        threads: 1,
+        cache: 0.1,
+        baseClock: 0.1,
+        boostClock: 0.1,
+      };
+
+      // Get the initial list of processors
+      const initialProcessors = await getAmount();
+
+      // Add a new processor
+      const postResponse = await api
+        .post("/api/cpus")
+        .send(cpu)
+        .expect(201)
+        .expect("Content-Type", /application\/json/);
+
+      // Get the current list of processors
+      const currentProcessors = await getAmount();
+
+      // Confirm the amount of processors has been increased
+      assert.strictEqual(currentProcessors, initialProcessors + 1);
     });
   });
 
