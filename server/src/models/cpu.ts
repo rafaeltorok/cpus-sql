@@ -68,7 +68,7 @@ Cpu.init(
           msg: "Invalid cache format",
         },
         min: {
-          args: [1],
+          args: [0.1],
           msg: "Invalid cache amount",
         },
         notNull: {
@@ -84,7 +84,7 @@ Cpu.init(
           msg: "Invalid core clock format",
         },
         min: {
-          args: [1],
+          args: [0.1],
           msg: "Invalid clock speed",
         },
         notNull: {
@@ -100,7 +100,7 @@ Cpu.init(
           msg: "Invalid core clock format",
         },
         min: {
-          args: [1],
+          args: [0.1],
           msg: "Invalid clock speed",
         },
         notNull: {

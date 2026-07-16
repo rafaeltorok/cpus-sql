@@ -34,7 +34,7 @@ const validateCpu = [
       return typeof value === "number";
     })
     .withMessage("Invalid cache format"),
-  body("cache").isFloat({ min: 1 }).withMessage("Invalid cache amount"),
+  body("cache").isFloat({ min: 0.1 }).withMessage("Invalid cache amount"),
 
   // Base clock validation
   body("baseclock").notEmpty().withMessage("Base Clock is required"),
@@ -43,7 +43,7 @@ const validateCpu = [
       return typeof value === "number";
     })
     .withMessage("Invalid core clock format"),
-  body("baseclock").isFloat({ min: 1 }).withMessage("Invalid clock speed"),
+  body("baseclock").isFloat({ min: 0.1 }).withMessage("Invalid clock speed"),
 
   // Boost clock validation
   body("boostclock").notEmpty().withMessage("Boost Clock is required"),
@@ -52,7 +52,7 @@ const validateCpu = [
       return typeof value === "number";
     })
     .withMessage("Invalid core clock format"),
-  body("boostclock").isFloat({ min: 1 }).withMessage("Invalid clock speed"),
+  body("boostclock").isFloat({ min: 0.1 }).withMessage("Invalid clock speed"),
 
   // Architecture and Socket validation
   body("architecture").notEmpty().withMessage("Architecture is required"),
