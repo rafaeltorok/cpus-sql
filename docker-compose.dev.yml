@@ -32,7 +32,6 @@ services:
       - dev-network
     volumes:
       - ./server:/usr/src/app/server
-      - server_node_modules:/usr/src/app/server/node_modules
     environment:
       DATABASE_URL: postgres://admin:admin@dev-db:5432/data
       PORT: 3001
@@ -57,7 +56,6 @@ services:
       - dev-network
     volumes:
       - ./client:/usr/src/app/client
-      - client_node_modules:/usr/src/app/client/node_modules
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:5173"]
       interval: 30s
@@ -88,8 +86,6 @@ services:
 
 volumes:
   psql_data:
-  server_node_modules:
-  client_node_modules:
 
 networks:
   dev-network:

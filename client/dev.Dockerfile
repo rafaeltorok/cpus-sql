@@ -1,6 +1,6 @@
 FROM node:20-alpine AS build
 
-WORKDIR /usr/src/app/client
+WORKDIR /usr/src/app
 
 # Install curl for the healthcheck
 RUN apk add --no-cache curl
@@ -9,10 +9,11 @@ RUN apk add --no-cache curl
 COPY --chown=node:node ./package*.json ./
 RUN npm ci
 
-COPY --chown=node:node . .
-
 EXPOSE 5173
 
 USER node
+
+# Change to the bind mounted host project folder
+WORKDIR /usr/src/app/client
 
 CMD ["npm", "run", "dev"]
