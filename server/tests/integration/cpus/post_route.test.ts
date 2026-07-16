@@ -149,6 +149,30 @@ describe("POST /api/cpus", () => {
       // Confirm the amount of processors has been increased
       assert.strictEqual(currentProcessors, initialProcessors + 1);
     });
+
+    test("a float boundary should be accepted", async () => {
+      const cpu = {
+        ...processors[0],
+        cores: 1.0,
+        threads: 1.0,
+      };
+
+      // Get the initial list of processors
+      const initialProcessors = await getAmount();
+
+      // Add a new processor
+      const postResponse = await api
+        .post("/api/cpus")
+        .send(cpu)
+        .expect(201)
+        .expect("Content-Type", /application\/json/);
+
+      // Get the current list of processors
+      const currentProcessors = await getAmount();
+
+      // Confirm the amount of processors has been increased
+      assert.strictEqual(currentProcessors, initialProcessors + 1);
+    });
   });
 
   describe("Invalid processor data", () => {
@@ -325,6 +349,34 @@ describe("POST /api/cpus", () => {
 
       // Assert there is an error message within the response
       assert.ok(postResponse.body.error.includes("Invalid core amount"));
+    });
+
+    test("returns error messages with decimal values on integer fields", async () => {
+      const cpu = {
+        ...processors[0],
+        cores: 0.1,
+        threads: 0.1,
+      };
+
+      // Get the initial list of processors
+      const initialProcessors = await getAmount();
+
+      // Add a new processor
+      const postResponse = await api
+        .post("/api/cpus")
+        .send(cpu)
+        .expect(400)
+        .expect("Content-Type", /application\/json/);
+
+      // Get the current list of processors
+      const currentProcessors = await getAmount();
+
+      // Confirm the amount of processors has not changed
+      assert.strictEqual(currentProcessors, initialProcessors);
+
+      // Assert there are error messages within the response
+      assert.ok(postResponse.body.error.includes("Invalid amount of cores"));
+      assert.ok(postResponse.body.error.includes("Invalid amount of threads"));
     });
   });
 });
