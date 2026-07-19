@@ -24,6 +24,7 @@ export default function App() {
   // React states
   const [cpus, setCpus] = useState<CpuType[]>([]);
   const [error, setError] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(true);
   const [showAll, setShowAll] = useState<boolean>(false); // Controls the visibility of all tables
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [showAddForm, setShowAddForm] = useState<boolean>(false);
@@ -32,10 +33,11 @@ export default function App() {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        setLoading(true);
         const response = await fetch(baseUrl);
         if (!response.ok)
           throw new Error("Failed to fetch data from the server");
-        const data: CpuType[] = await response.json();
+        const data: CpuType[] = await response.json() as CpuType[];
         setCpus(data);
       } catch (err: unknown) {
         if (err instanceof Error) {
@@ -43,9 +45,11 @@ export default function App() {
         } else {
           setError(String(err));
         }
+      } finally {
+        setLoading(false);
       }
     };
-    fetchData();
+    void fetchData();
   }, []);
 
   // Add a new CPU using the data from the add form
@@ -71,7 +75,7 @@ export default function App() {
       const returnedObject = await cpuService.create(cpuObject);
 
       // Update the Web UI to contain the new object
-      setCpus((prevCpus) => [...prevCpus, returnedObject]); // Functional update for state
+      setCpus((prevCpus: CpuType[]) => [...prevCpus, returnedObject]); // Functional update for state
 
       alert(
         `${returnedObject.manufacturer} ${returnedObject.model} was added!`,
@@ -96,7 +100,7 @@ export default function App() {
         .remove(id)
         .then(() => {
           // Remove the CPU from the state
-          setCpus(cpus.filter((cpu) => cpu.id !== id));
+          setCpus(cpus.filter((cpu: CpuType) => cpu.id !== id));
         })
         .catch((_exception) => {
           alert("Failed to remove CPU");
@@ -133,7 +137,7 @@ export default function App() {
   }
 
   // Filter the list based on the search term
-  const filteredCpus: CpuType[] = cpus.filter((cpu) => {
+  const filteredCpus: CpuType[] = cpus.filter((cpu: CpuType) => {
     return `${cpu.manufacturer} ${cpu.model}`
       .toLowerCase()
       .includes(searchTerm.toLowerCase());
@@ -144,29 +148,31 @@ export default function App() {
       <div>
         <h1 id="main-page-title">CPU Manager</h1>{" "}
         {/* Add ref to the <h1> element */}
+        
         <AddCpuForm
           addCpu={addCpu}
           showAddForm={showAddForm}
           setShowAddForm={setShowAddForm}
         />
+        
         <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+        
         <PageIndex cpusData={filteredCpus} />
+        
         <div id="show-all-button" className="button-area">
           <button onClick={() => setShowAll((prev) => !prev)}>
             {showAll ? "Hide all data" : "Show all data"}
           </button>
         </div>
-        {error && <p>Error: {error}</p>}
-        {filteredCpus.length === 0 ? (
-          <h2>No CPUs were found</h2>
-        ) : (
-          <CpuList
-            cpus={filteredCpus}
-            deleteCpu={deleteCpu}
-            showAll={showAll}
-            scrollToIndex={scrollToIndex}
-          />
-        )}
+
+        <CpuList
+          cpus={filteredCpus}
+          deleteCpu={deleteCpu}
+          showAll={showAll}
+          scrollToIndex={scrollToIndex}
+          loading={loading}
+          error={error}
+        />
       </div>
     </>
   );
