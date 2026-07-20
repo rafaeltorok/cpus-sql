@@ -35,7 +35,7 @@ export default function SearchBar({
       {showSearch && (
         <form>
           <input
-            type="text"
+            type="search"
             id="search-bar-input"
             placeholder="Search"
             value={searchTerm}
