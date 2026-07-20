@@ -20,10 +20,10 @@ export default function CpuList({
   showAll,
   scrollToIndex,
   loading,
-  error
+  error,
 }: CpuListProps) {
   if (loading) return <h2>Loading CPUs, please wait...</h2>;
-        
+
   if (error) return <h2>Error: {error}</h2>;
 
   return (
@@ -33,7 +33,12 @@ export default function CpuList({
       ) : (
         cpus.map((cpu) => (
           <div key={cpu.id}>
-            <Cpu key={cpu.id} cpu={cpu} onDelete={deleteCpu} showAll={showAll} />
+            <Cpu
+              key={cpu.id}
+              cpu={cpu}
+              onDelete={deleteCpu}
+              showAll={showAll}
+            />
             <button
               className="back-to-index-button"
               onClick={() =>

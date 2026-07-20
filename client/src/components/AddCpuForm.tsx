@@ -37,7 +37,9 @@ export default function AddCpuForm({
   });
 
   // Handle the add form submit
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>): Promise<void> => {
+  const handleSubmit = async (
+    event: React.FormEvent<HTMLFormElement>,
+  ): Promise<void> => {
     event.preventDefault();
 
     // Add the CPU
@@ -73,7 +75,12 @@ export default function AddCpuForm({
 
   return (
     <div>
-      <form onSubmit={(e) => { void handleSubmit(e) }} id="add-cpu-form">
+      <form
+        onSubmit={(e) => {
+          void handleSubmit(e);
+        }}
+        id="add-cpu-form"
+      >
         <fieldset className="add-cpu-field">
           <button
             id="add-cpu-button"

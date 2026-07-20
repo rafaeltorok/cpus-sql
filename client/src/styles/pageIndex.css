@@ -39,6 +39,7 @@
 
 .index-item-button {
   width: 100%;
+  border: 1px solid #303030;
 }
 
 .page-index-list:last-child {

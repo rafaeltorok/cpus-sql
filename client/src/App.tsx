@@ -37,7 +37,7 @@ export default function App() {
         const response = await fetch(baseUrl);
         if (!response.ok)
           throw new Error("Failed to fetch data from the server");
-        const data: CpuType[] = await response.json() as CpuType[];
+        const data: CpuType[] = (await response.json()) as CpuType[];
         setCpus(data);
       } catch (err: unknown) {
         if (err instanceof Error) {
@@ -148,23 +148,18 @@ export default function App() {
       <div>
         <h1 id="main-page-title">CPU Manager</h1>{" "}
         {/* Add ref to the <h1> element */}
-        
         <AddCpuForm
           addCpu={addCpu}
           showAddForm={showAddForm}
           setShowAddForm={setShowAddForm}
         />
-        
         <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
-        
         <PageIndex cpusData={filteredCpus} />
-        
         <div id="show-all-button" className="button-area">
           <button onClick={() => setShowAll((prev) => !prev)}>
             {showAll ? "Hide all data" : "Show all data"}
           </button>
         </div>
-
         <CpuList
           cpus={filteredCpus}
           deleteCpu={deleteCpu}
