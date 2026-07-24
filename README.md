@@ -169,27 +169,27 @@ psql -U admin -W -d data
 ## CRUD operations
 
 - GET
-  ```
+  ```bash
   curl -X GET http://localhost:3001/api/cpus
   ```
 
 - GET by ID
-  ```
+  ```bash
   curl -X GET http://localhost:3001/api/cpus/<id>
   ```
 
-- POST (Example)
-  ```
-  curl -X POST http://localhost:3001/api/cpus -H "Content-Type: application/json" -d '{ "manufacturer":"AMD", "model":"Ryzen 7 7800X3D", "cores":8, "threads":16, "cache":104, "baseclock":4.2, "boostclock":5.2, "architecture":"Zen 4", "mbsocket":"AM5" }'
+- POST (All fields are required, only the **TDP** is optional)
+  ```bash
+  curl -X POST http://localhost:3001/api/cpus -H "Content-Type: application/json" -d '{ "manufacturer":"AMD", "model":"Ryzen 7 7800X3D", "cores":8, "threads":16, "cache":104, "baseclock":4.2, "boostclock":5.2, "architecture":"Zen 4", "mbsocket":"AM5", "tdp":120 }'
   ```
 
 - PUT (All columns are necessary, including the ones that are not going to be updated)
-  ```
-  curl -X PUT http://localhost:3001/api/cpus/20 -H "Content-Type: application/json" -d '{ "manufacturer":"AMD", "model":"Ryzen 5 7600X", "cores":6, "threads":12, "cache":38, "baseclock":4.7, "boostclock":5.3, "architecture":"Zen 4", "mbsocket":"AM5" }'
+  ```bash
+  curl -X PUT http://localhost:3001/api/cpus/20 -H "Content-Type: application/json" -d '{ "manufacturer":"AMD", "model":"Ryzen 5 7600X", "cores":6, "threads":12, "cache":38, "baseclock":4.7, "boostclock":5.3, "architecture":"Zen 4", "mbsocket":"AM5", "tdp":105 }'
   ```
 
 - DELETE
-  ```
+  ```bash
   curl -X DELETE http://localhost:3001/api/cpus/<id>'
   ```
 
