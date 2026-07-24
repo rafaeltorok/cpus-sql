@@ -131,6 +131,7 @@ describe("POST /api/cpus", () => {
         cache: 0.1,
         baseClock: 0.1,
         boostClock: 0.1,
+        tdp: 0,
       };
 
       // Get the initial list of processors
@@ -155,13 +156,14 @@ describe("POST /api/cpus", () => {
         ...processors[0],
         cores: 1.0,
         threads: 1.0,
+        tdp: 1.0,
       };
 
       // Get the initial list of processors
       const initialProcessors = await getAmount();
 
       // Add a new processor
-      const postResponse = await api
+      await api
         .post("/api/cpus")
         .send(cpu)
         .expect(201)
@@ -172,6 +174,29 @@ describe("POST /api/cpus", () => {
 
       // Confirm the amount of processors has been increased
       assert.strictEqual(currentProcessors, initialProcessors + 1);
+    });
+
+    test("the TDP field is optional", async () => {
+      const { tdp, ...otherFields } = processors[0];
+
+      // Get the initial list of processors
+      const initialProcessors = await getAmount();
+
+      // Add a new processor
+      const postResponse = await api
+        .post("/api/cpus")
+        .send(otherFields)
+        .expect(201)
+        .expect("Content-Type", /application\/json/);
+
+      // Get the current list of processors
+      const currentProcessors = await getAmount();
+
+      // Confirm the amount of processors has been increased
+      assert.strictEqual(currentProcessors, initialProcessors + 1);
+
+      // Assert the TDP should default to 0 when not present
+      assert.strictEqual(postResponse.body.tdp, 0);
     });
   });
 
@@ -356,6 +381,7 @@ describe("POST /api/cpus", () => {
         ...processors[0],
         cores: 0.1,
         threads: 0.1,
+        tdp: 0.1,
       };
 
       // Get the initial list of processors
@@ -377,6 +403,7 @@ describe("POST /api/cpus", () => {
       // Assert there are error messages within the response
       assert.ok(postResponse.body.error.includes("Invalid amount of cores"));
       assert.ok(postResponse.body.error.includes("Invalid amount of threads"));
+      assert.ok(postResponse.body.error.includes("Invalid TDP amount"));
     });
   });
 });
