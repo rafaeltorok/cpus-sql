@@ -8,6 +8,7 @@ export interface NewCpu {
   boostclock: number;
   architecture: string;
   mbsocket: string;
+  tdp: number;
 }
 
 export interface CpuType extends NewCpu {
