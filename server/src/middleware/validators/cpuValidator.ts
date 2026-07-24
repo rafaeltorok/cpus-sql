@@ -58,6 +58,15 @@ const validateCpu = [
   body("architecture").notEmpty().withMessage("Architecture is required"),
   body("mbsocket").notEmpty().withMessage("Motherboard socket is required"),
 
+  // TDP validation
+  body("tdp")
+    .optional()
+    .custom((value) => {
+      return typeof value === "number";
+    })
+    .withMessage("Invalid TDP format"),
+  body("tdp").optional().isInt({ min: 0 }).withMessage("Invalid TDP amount"),
+
   // Handles the error response
   (req: Request, res: Response, next: NextFunction) => {
     const errors = validationResult(req);
