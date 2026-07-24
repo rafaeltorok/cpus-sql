@@ -34,6 +34,7 @@ export default function AddCpuForm({
     boostclock: 0,
     architecture: "",
     mbsocket: "",
+    tdp: 0,
   });
 
   // Handle the add form submit
@@ -53,6 +54,7 @@ export default function AddCpuForm({
       boostclock: cpuSpecs.boostclock,
       architecture: cpuSpecs.architecture.trim(),
       mbsocket: cpuSpecs.mbsocket.trim(),
+      tdp: cpuSpecs.tdp,
     });
 
     // If the CPU was successfully added, close the form and clear the input data
@@ -67,6 +69,7 @@ export default function AddCpuForm({
         boostclock: 0,
         architecture: "",
         mbsocket: "",
+        tdp: 0,
       });
 
       setShowAddForm(false);
@@ -195,6 +198,20 @@ export default function AddCpuForm({
                 onChange={(e: Event) =>
                   setCpuSpecs({ ...cpuSpecs, mbsocket: e.target.value })
                 }
+              />
+
+              <FormRow
+                id="tdp"
+                type="number"
+                label="TDP (W)"
+                placeholder="105"
+                value={String(cpuSpecs.tdp)}
+                onChange={(e: Event) => {
+                  setCpuSpecs({
+                    ...cpuSpecs,
+                    tdp: Number(e.target.value),
+                  });
+                }}
               />
 
               <div className="form-row">
