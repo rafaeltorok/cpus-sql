@@ -9,7 +9,7 @@ import validateCpu from "../middleware/validators/cpuValidator.js";
 
 // TypeScript types
 import type { Request, Response, NextFunction } from "express";
-import type { NewCpu } from "../types.js";
+import type { NewCpu } from "../../types/types.js";
 
 const cpusRouter = express.Router();
 
@@ -69,20 +69,16 @@ cpusRouter.post(
         mbsocket,
       } = req.body;
 
-      if (
-        !manufacturer ||
-        !model ||
-        cores < 1 ||
-        threads < 1 ||
-        cache < 0.01 ||
-        baseclock < 0.01 ||
-        boostclock < 0.01 ||
-        !architecture ||
-        !mbsocket
-      ) {
-        return res.status(400).send("Invalid input data");
+      // Handles the optional TDP value
+      let tdp;
+
+      if (!req.body.tdp) {
+        tdp = 0;
+      } else {
+        tdp = req.body.tdp;
       }
 
+      // Create a new CPU object
       const newCpu = await Cpu.create({
         manufacturer,
         model,
@@ -93,6 +89,7 @@ cpusRouter.post(
         boostclock,
         architecture,
         mbsocket,
+        tdp,
       });
 
       return res.status(201).json(newCpu);
@@ -123,28 +120,17 @@ cpusRouter.put(
         boostclock,
         architecture,
         mbsocket,
+        tdp,
       } = req.body;
 
+      // Get the CPU to be updated from the database
       const cpuToUpdate = await Cpu.findByPk(req.params.id);
 
       if (!cpuToUpdate) {
         return res.status(404).end();
       }
 
-      if (
-        !manufacturer ||
-        !model ||
-        cores < 1 ||
-        threads < 1 ||
-        cache < 0.01 ||
-        baseclock < 0.01 ||
-        boostclock < 0.01 ||
-        !architecture ||
-        !mbsocket
-      ) {
-        return res.status(400).send("Invalid input data");
-      }
-
+      // Update the object with the new data
       await cpuToUpdate.update({
         manufacturer,
         model,
@@ -155,6 +141,7 @@ cpusRouter.put(
         boostclock,
         architecture,
         mbsocket,
+        tdp,
       });
 
       return res.status(200).json(cpuToUpdate);

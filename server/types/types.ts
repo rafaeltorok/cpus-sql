@@ -1,5 +1,4 @@
-export interface CpuType {
-  id?: number;
+export interface NewCpu {
   manufacturer: string;
   model: string;
   cores: number;
@@ -9,4 +8,9 @@ export interface CpuType {
   boostclock: number;
   architecture: string;
   mbsocket: string;
+  tdp: number;
+}
+
+export interface CpuType extends NewCpu {
+  id: number;
 }

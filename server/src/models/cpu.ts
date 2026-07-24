@@ -126,6 +126,19 @@ Cpu.init(
         },
       },
     },
+    tdp: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      validate: {
+        isInt: {
+          msg: "Invalid TDP format",
+        },
+        min: {
+          args: [0],
+          msg: "Invalid TDP amount",
+        },
+      },
+    },
   },
   {
     sequelize,
