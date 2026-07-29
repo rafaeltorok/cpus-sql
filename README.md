@@ -34,8 +34,13 @@ CPUs SQL displays a list with your favorite CPUs specifications, you can add, re
 The following variables are required inside of `./server/.env`
 ```conf
 DATABASE_URL=postgres://<username>:<password>@<hostname>:<port>/<database_name>
+TEST_DATABASE_URL=postgres://<username>:<password>@<hostname>:<port>/<database_name>
+E2E_DATABASE_URL=postgres://<username>:<password>@<hostname>:<port>/<database_name>
 PORT=3001
+DATABASE_SSL=true
 ```
+
+- The `DATABASE_SSL` variable should be set to `false` when running on Docker networks.
 
 
 ## Setup

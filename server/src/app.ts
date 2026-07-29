@@ -29,7 +29,7 @@ app.use("/api/cpus", cpusRouter);
 app.use("/api/health", healthRouter);
 
 // Route to reset the test database data
-if (process.env.NODE_ENV === "test") {
+if (process.env.NODE_ENV === "test" || process.env.NODE_ENV === "e2e") {
   app.use("/api/reset", testsRouter);
 }
 
