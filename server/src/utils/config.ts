@@ -8,6 +8,8 @@ let DATABASE_URL: string;
 // Define which database should be used, the main or the test one
 if (process.env.NODE_ENV === "test") {
   DATABASE_URL = process.env.TEST_DATABASE_URL || "";
+} else if (process.env.NODE_ENV === "e2e") {
+  DATABASE_URL = process.env.E2E_DATABASE_URL || "";
 } else {
   DATABASE_URL = process.env.DATABASE_URL || "";
 }
