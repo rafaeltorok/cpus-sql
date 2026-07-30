@@ -18,6 +18,11 @@ before(() => {
     });
 });
 
+after(() => {
+  // Remove all sample data after the test suite has finished
+  cy.request("POST", `${Cypress.env("backendUrl")}/api/reset`);
+});
+
 // Tests
 describe("the page index", function () {
   beforeEach(function () {
@@ -39,7 +44,7 @@ describe("the page index", function () {
 
     // Assert each sample processor is present
     for(let i = 0; i < processors.length; i++) {
-      cy.get(".page-index-list li").eq(i).contains(processors[i].model);
+      cy.get(".index-list li").eq(i).contains(processors[i].model);
     }
   });
 
@@ -77,6 +82,6 @@ describe("the page index", function () {
       .click();
 
     // Assert the index is being displayed
-    cy.get(".page-index-list").should("be.visible");
+    cy.get(".index-list").should("be.visible");
   });
 });

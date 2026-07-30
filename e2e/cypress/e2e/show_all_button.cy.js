@@ -19,6 +19,11 @@ before(() => {
     });
 });
 
+after(() => {
+  // Remove all sample data after the test suite has finished
+  cy.request("POST", `${Cypress.env("backendUrl")}/api/reset`);
+});
+
 // Tests
 describe("the show/hide all data button", function () {
   beforeEach(function () {
