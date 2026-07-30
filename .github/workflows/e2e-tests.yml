@@ -9,6 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       E2E_DATABASE_URL: ${{ secrets.E2E_DATABASE_URL }}
+      DATABASE_SSL: ${{ secrets.DATABASE_SSL }}
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-node@v6
