@@ -16,7 +16,7 @@ if (process.env.DATABASE_SSL === "true") {
         rejectUnauthorized: false,
       },
     },
-    logging: process.env.NODE_ENV === "test" ? false : true,
+    logging: process.env.NODE_ENV === "test" || process.env.NODE_ENV === "e2e" ? false : true,
   });
 } else if (process.env.DATABASE_SSL === "false") {
   // Disable SSL connections for the Docker orchestrations
@@ -25,7 +25,7 @@ if (process.env.DATABASE_SSL === "true") {
     dialectOptions: {
       ssl: false,
     },
-    logging: process.env.NODE_ENV === "test" ? false : true,
+    logging: process.env.NODE_ENV === "test" || process.env.NODE_ENV === "e2e" ? false : true,
   });
 } else {
   throw new Error(
