@@ -5,6 +5,7 @@ interface FormRowProps {
   label: string;
   placeholder: string;
   value: string;
+  float: boolean;
   onChange: (e: Event) => void;
 }
 
@@ -17,6 +18,7 @@ export default function FormRow({
   label,
   placeholder,
   value,
+  float,
   onChange,
 }: FormRowProps) {
   return (
@@ -28,6 +30,7 @@ export default function FormRow({
         type={type}
         placeholder={placeholder}
         value={value}
+        step={float ? "0.1" : ""}
         onChange={onChange}
       />
     </div>
