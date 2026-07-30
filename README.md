@@ -9,6 +9,8 @@
 - [Docker](#docker)
 - [CRUD Operations](#crud-operations)
 - [Tests](#tests)
+  - [Integration tests](#integration-tests)
+  - [E2E (Cypress)](#e2e-cypress)
 
 
 ## About
@@ -220,3 +222,32 @@ npm run test
 ```
 
 - This command will automatically **compile** the code before running the test suites.
+
+### E2E (Cypress)
+
+Install dependencies
+```bash
+cd ./e2e && npm install
+```
+
+Start the client
+```bash
+cd ./client && npm run dev
+```
+
+Start the server in testing mode
+```bash
+cd ./server && npm run start:e2e
+```
+
+Run the tests
+
+- On CLI
+  ```bash
+  npm run e2e
+  ```
+
+- On UI mode (Web Browser)
+  ```bash
+  npm run e2e:ui
+  ```
