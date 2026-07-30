@@ -3,8 +3,11 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "e2e": "cypress run",
-    "e2e:ui": "cypress open"
+    "server": "cd ../server && npm run start:e2e",
+    "client": "cd ../client && npm run dev",
+    "dev:test-env": "concurrently 'npm run server' 'npm run client'",
+    "e2e": "start-server-and-test dev:test-env 'http://localhost:5173|http://localhost:3001/api/health' 'cypress run'",
+    "e2e:ui": "start-server-and-test dev:test-env 'http://localhost:5173|http://localhost:3001/api/health' 'cypress open'"
   },
   "keywords": [],
   "author": "",
@@ -15,6 +18,8 @@
     "eslint-plugin-cypress": "^4.1.0"
   },
   "dependencies": {
-    "prettier": "^3.9.6"
+    "concurrently": "^10.0.4",
+    "prettier": "^3.9.6",
+    "start-server-and-test": "^3.0.11"
   }
 }

@@ -226,19 +226,21 @@ npm run test
 ### E2E (Cypress)
 
 Install dependencies
-```bash
-cd ./e2e && npm install
-```
 
-Start the client
-```bash
-cd ./client && npm run dev
-```
+- Cypress
+  ```bash
+  cd ./e2e && npm install
+  ```
 
-Start the server in testing mode
-```bash
-cd ./server && npm run start:e2e
-```
+- Frontend
+  ```bash
+  cd ./client && npm install
+  ```
+
+- Backend Server
+  ```bash
+  cd ./server && npm install
+  ```
 
 Run the tests
 

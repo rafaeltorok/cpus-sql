@@ -1,0 +1,28 @@
+name: E2E tests
+
+on:
+  push:
+    branches: [ main, testing ]
+
+jobs:
+  e2e-cypress:
+    runs-on: ubuntu-latest
+    env:
+      E2E_DATABASE_URL: ${{ secrets.E2E_DATABASE_URL }}
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+      
+      - name: Install the Client dependencies
+        working-directory: ./client
+        run: npm install
+      
+      - name: Install Server dependencies
+        working-directory: ./server
+        run: npm install
+      
+      - name: Run E2E tests in CLI
+        working-directory: ./e2e
+        run: npm install && npm run e2e
