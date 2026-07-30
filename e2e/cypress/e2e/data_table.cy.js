@@ -9,6 +9,11 @@ before(() => {
   });
 });
 
+after(() => {
+  // Remove all sample data after the test suite has finished
+  cy.request("POST", `${Cypress.env("backendUrl")}/api/reset`);
+});
+
 // Tests
 describe("testing the CPU data table", function () {
   beforeEach(function () {
@@ -40,7 +45,15 @@ describe("testing the CPU data table", function () {
   });
 
   it("the processor can be removed", function () {
-    cy.get(".cpu-data-table tbody #delete-cpu-button").click();
-    cy.get(".cpu-data-table").should("not.exist");
+    const processor = processors.find((p) => p.model === "Ryzen 5 5600X");
+
+    // Expand the data table
+    showCpuData(`${processor.manufacturer} ${processor.model}`);
+
+    // Select the Delete button
+    cy.contains("Delete").click();
+
+    // Confirm the data table has been removed from the list
+    cy.get(`${processor.manufacturer} ${processor.model}`).should("not.exist");
   });
 });

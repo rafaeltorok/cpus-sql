@@ -36,7 +36,7 @@ export function checkRowData(rowName, data) {
 }
 
 export function indexSelector(itemName) {
-  cy.get(".page-index-list li")
+  cy.get(".index-list li")
     .contains(itemName) // Select based on text
     .click();
 
