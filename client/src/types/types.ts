@@ -1,3 +1,16 @@
+export interface InputData {
+  manufacturer: string;
+  model: string;
+  cores: string;
+  threads: string;
+  cache: string;
+  baseclock: string;
+  boostclock: string;
+  architecture: string;
+  mbsocket: string;
+  tdp: string;
+}
+
 export interface NewCpu {
   manufacturer: string;
   model: string;

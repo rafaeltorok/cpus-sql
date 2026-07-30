@@ -61,9 +61,9 @@ export default function App() {
         cpuObject.model === "" ||
         cpuObject.cores < 1 ||
         cpuObject.threads < 1 ||
-        cpuObject.cache < 0.01 ||
-        cpuObject.baseclock < 0.01 ||
-        cpuObject.boostclock < 0.01 ||
+        cpuObject.cache < 0.1 ||
+        cpuObject.baseclock < 0.1 ||
+        cpuObject.boostclock < 0.1 ||
         cpuObject.architecture === "" ||
         cpuObject.mbsocket === ""
       ) {
