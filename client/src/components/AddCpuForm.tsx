@@ -8,7 +8,7 @@ import FormRow from "./FormRow";
 import "../styles/addCpuForm.css";
 
 // TypeScript types
-import type { NewCpu } from "../types/types";
+import type { InputData, NewCpu } from "../types/types";
 
 interface AddCpuFormProps {
   addCpu: (cpu: NewCpu) => Promise<boolean>;
@@ -24,17 +24,17 @@ export default function AddCpuForm({
   showAddForm,
   setShowAddForm,
 }: AddCpuFormProps) {
-  const [cpuSpecs, setCpuSpecs] = useState<NewCpu>({
+  const [cpuSpecs, setCpuSpecs] = useState<InputData>({
     manufacturer: "",
     model: "",
-    cores: 0,
-    threads: 0,
-    cache: 0,
-    baseclock: 0,
-    boostclock: 0,
+    cores: "0",
+    threads: "0",
+    cache: "0",
+    baseclock: "0",
+    boostclock: "0",
     architecture: "",
     mbsocket: "",
-    tdp: 0,
+    tdp: "0",
   });
 
   // Handle the add form submit
@@ -47,14 +47,14 @@ export default function AddCpuForm({
     const response = await addCpu({
       manufacturer: cpuSpecs.manufacturer.trim(),
       model: cpuSpecs.model.trim(),
-      cores: cpuSpecs.cores,
-      threads: cpuSpecs.threads,
-      cache: cpuSpecs.cache,
-      baseclock: cpuSpecs.baseclock,
-      boostclock: cpuSpecs.boostclock,
+      cores: Number(cpuSpecs.cores),
+      threads: Number(cpuSpecs.threads),
+      cache: Number(cpuSpecs.cache),
+      baseclock: Number(cpuSpecs.baseclock),
+      boostclock: Number(cpuSpecs.boostclock),
       architecture: cpuSpecs.architecture.trim(),
       mbsocket: cpuSpecs.mbsocket.trim(),
-      tdp: cpuSpecs.tdp,
+      tdp: Number(cpuSpecs.tdp),
     });
 
     // If the CPU was successfully added, close the form and clear the input data
@@ -62,14 +62,14 @@ export default function AddCpuForm({
       setCpuSpecs({
         manufacturer: "",
         model: "",
-        cores: 0,
-        threads: 0,
-        cache: 0,
-        baseclock: 0,
-        boostclock: 0,
+        cores: "",
+        threads: "",
+        cache: "",
+        baseclock: "",
+        boostclock: "",
         architecture: "",
         mbsocket: "",
-        tdp: 0,
+        tdp: "0",
       });
 
       setShowAddForm(false);
@@ -101,6 +101,7 @@ export default function AddCpuForm({
                 label="Manufacturer"
                 placeholder="AMD"
                 value={cpuSpecs.manufacturer}
+                float={false}
                 onChange={(e: Event) =>
                   setCpuSpecs({ ...cpuSpecs, manufacturer: e.target.value })
                 }
@@ -112,6 +113,7 @@ export default function AddCpuForm({
                 label="Model"
                 placeholder="Ryzen 7 5800X"
                 value={cpuSpecs.model}
+                float={false}
                 onChange={(e: Event) =>
                   setCpuSpecs({ ...cpuSpecs, model: e.target.value })
                 }
@@ -122,9 +124,10 @@ export default function AddCpuForm({
                 type="number"
                 label="Cores"
                 placeholder="8"
-                value={String(cpuSpecs.cores)}
+                value={cpuSpecs.cores}
+                float={false}
                 onChange={(e: Event) =>
-                  setCpuSpecs({ ...cpuSpecs, cores: Number(e.target.value) })
+                  setCpuSpecs({ ...cpuSpecs, cores: e.target.value })
                 }
               />
 
@@ -133,9 +136,10 @@ export default function AddCpuForm({
                 type="number"
                 label="Threads"
                 placeholder="16"
-                value={String(cpuSpecs.threads)}
+                value={cpuSpecs.threads}
+                float={false}
                 onChange={(e: Event) =>
-                  setCpuSpecs({ ...cpuSpecs, threads: Number(e.target.value) })
+                  setCpuSpecs({ ...cpuSpecs, threads: e.target.value })
                 }
               />
 
@@ -144,9 +148,10 @@ export default function AddCpuForm({
                 type="number"
                 label="Cache (MB)"
                 placeholder="36"
-                value={String(cpuSpecs.cache)}
+                value={cpuSpecs.cache}
+                float={true}
                 onChange={(e: Event) =>
-                  setCpuSpecs({ ...cpuSpecs, cache: Number(e.target.value) })
+                  setCpuSpecs({ ...cpuSpecs, cache: e.target.value })
                 }
               />
 
@@ -155,12 +160,10 @@ export default function AddCpuForm({
                 type="number"
                 label="Base Clock (GHz)"
                 placeholder="3.8"
-                value={String(cpuSpecs.baseclock)}
+                value={cpuSpecs.baseclock}
+                float={true}
                 onChange={(e: Event) =>
-                  setCpuSpecs({
-                    ...cpuSpecs,
-                    baseclock: Number(e.target.value),
-                  })
+                  setCpuSpecs({ ...cpuSpecs, baseclock: e.target.value })
                 }
               />
 
@@ -169,12 +172,10 @@ export default function AddCpuForm({
                 type="number"
                 label="Boost Clock (GHz)"
                 placeholder="4.7"
-                value={String(cpuSpecs.boostclock)}
+                value={cpuSpecs.boostclock}
+                float={true}
                 onChange={(e: Event) =>
-                  setCpuSpecs({
-                    ...cpuSpecs,
-                    boostclock: Number(e.target.value),
-                  })
+                  setCpuSpecs({ ...cpuSpecs, boostclock: e.target.value })
                 }
               />
 
@@ -184,6 +185,7 @@ export default function AddCpuForm({
                 label="Architecture"
                 placeholder="Zen 3"
                 value={cpuSpecs.architecture}
+                float={false}
                 onChange={(e: Event) =>
                   setCpuSpecs({ ...cpuSpecs, architecture: e.target.value })
                 }
@@ -195,6 +197,7 @@ export default function AddCpuForm({
                 label="Socket"
                 placeholder="AM4"
                 value={cpuSpecs.mbsocket}
+                float={false}
                 onChange={(e: Event) =>
                   setCpuSpecs({ ...cpuSpecs, mbsocket: e.target.value })
                 }
@@ -205,12 +208,10 @@ export default function AddCpuForm({
                 type="number"
                 label="TDP (W)"
                 placeholder="105"
-                value={String(cpuSpecs.tdp)}
+                value={cpuSpecs.tdp}
+                float={false}
                 onChange={(e: Event) => {
-                  setCpuSpecs({
-                    ...cpuSpecs,
-                    tdp: Number(e.target.value),
-                  });
+                  setCpuSpecs({ ...cpuSpecs, tdp: e.target.value });
                 }}
               />
 
