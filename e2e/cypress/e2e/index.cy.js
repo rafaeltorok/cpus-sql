@@ -1,4 +1,4 @@
-import { indexSelector } from "./helper";
+import { checkRowData, indexSelector } from "./helper";
 
 let processors;
 
@@ -65,6 +65,25 @@ describe("the page index", function () {
 
     // Assert the Show button is displayed again
     cy.should("contain", "Show index");
+  });
+
+  it("selecting an entry should automatically expand its data table", function () {
+    // Show the index
+    cy.contains("Show index").click();
+
+    // Select a processor
+    const processor = processors.find((p) => p.model === "Ryzen 5 5600X");
+
+    indexSelector(`${processor.manufacturer} ${processor.model}`);
+
+    // Assert all specs are being displayed
+    checkRowData(/cores \/ threads/i, `${processor.cores} / ${processor.threads}`);
+    checkRowData(/cache/i, `${processor.cache} MB`);
+    checkRowData(/base clock/i, `${processor.baseclock} GHz`);
+    checkRowData(/boost clock/i, `${processor.boostclock} GHz`);
+    checkRowData(/architecture/i, processor.architecture);
+    checkRowData(/socket/i, processor.mbsocket);
+    checkRowData(/tdp/i, `${processor.tdp} W`);
   });
 
   it("the back to index button should return to the top of the page", function () {
