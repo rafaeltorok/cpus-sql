@@ -119,7 +119,7 @@ cd ./server
 
 Build the Docker image
 ```bash
-docker build -t cpus-sql .
+docker build -f ./prod.Dockerfile -t cpus-sql .
 ```
 
 Start the container
