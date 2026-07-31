@@ -28,39 +28,130 @@ describe("the search bar", function () {
     cy.visit("");
   });
 
-  it("the search bar can be shown", function () {
-    // Show the search bar
-    cy.contains("Search").click();
+  describe("basic component functionality", function () {
+    it("the search bar can be shown", function () {
+      // Show the search bar
+      cy.contains("Search").click();
 
-    // Assert the input field is being displayed
-    cy.get("#search-bar-input").should("be.visible");
+      // Assert the input field is being displayed
+      cy.get("#search-bar-input").should("be.visible");
+    });
+
+    it("the search bar can be hidden", function () {
+      // Show the search bar
+      cy.contains("Search").click();
+
+      // Assert the input field is being displayed
+      cy.get("#search-bar-input").should("be.visible");
+
+      // Hide it
+      cy.contains("Cancel").click();
+
+      // Confirm the Search button is shown again
+      cy.contains("Search").should("be.visible");
+
+      // Assert the input field is hidden
+      cy.get("#search-bar-input").should("not.exist");
+    });
+
+    it("the search field can be typed on", function () {
+      // Show the search bar
+      cy.contains("Search").click();
+
+      // Type on the field
+      cy.get("#search-bar-input").type("ryzen");
+
+      // Assert the correct value is present on the field
+      cy.get("#search-bar-input").should("have.value", "ryzen");
+    });
   });
+  
+  describe("filtering the list based on the search term", function () {
+    it("the search term should filter the processors list", function () {
+      // Show the search bar
+      cy.contains("Search").click();
 
-  it("the search bar can be hidden", function () {
-    // Show the search bar
-    cy.contains("Search").click();
+      const searchTerm = "AMD";
 
-    // Assert the input field is being displayed
-    cy.get("#search-bar-input").should("be.visible");
+      // Type on the field
+      cy.get("#search-bar-input").type(searchTerm);
 
-    // Hide it
-    cy.contains("Cancel").click();
+      // Filter all related processors form the original list
+      const filteredProcessors = processors.filter((p) => {
+        `${p.manufacturer} ${p.model}`.toLowerCase().includes(searchTerm)
+      });
 
-    // Confirm the Search button is shown again
-    cy.contains("Search").should("be.visible");
+      // Assert all filtered processors are present on the page
+      for (const processor of filteredProcessors) {
+        cy.contains(`${processor.manufacturer} ${processor.model}`);
+      }
 
-    // Assert the input field is hidden
-    cy.get("#search-bar-input").should("not.exist");
-  });
+      // Assert other unrelated processors are not present on the results
+      for (const processor of processors) {
+        if (processor.manufacturer === "Intel") {
+          cy.contains(`${processor.manufacturer} ${processor.model}`).should("not.exist");
+        }
+      }
+    });
 
-  it("the search field can be typed on", function () {
-    // Show the search bar
-    cy.contains("Search").click();
+    it("the search functionality should be case-insensitive", function () {
+      // Show the search bar
+      cy.contains("Search").click();
 
-    // Type on the field
-    cy.get("#search-bar-input").type("ryzen");
+      // Type on the field
+      cy.get("#search-bar-input").type("amd ryzen 5 5600x");
 
-    // Assert the correct value is present on the field
-    cy.get("#search-bar-input").should("have.value", "ryzen");
+      // Assert the processor was found
+      cy.contains("AMD Ryzen 5 5600X").should("be.visible");
+    });
+
+    it("searching by a specific term should return proper results", function () {
+      // Show the search bar
+      cy.contains("Search").click();
+
+      // Type on the field
+      cy.get("#search-bar-input").type("5600");
+
+      // Assert the processor was found
+      cy.contains("AMD Ryzen 5 5600X").should("be.visible");
+    });
+
+    it("it should filter based on the processor line", function () {
+      // Show the search bar
+      cy.contains("Search").click();
+
+      const searchTerm = "i7";
+
+      // Type on the field
+      cy.get("#search-bar-input").type(searchTerm);
+
+      // Filter all related processors form the original list
+      const filteredProcessors = processors.filter((p) => {
+        `${p.manufacturer} ${p.model}`.toLowerCase().includes(searchTerm)
+      });
+
+      // Assert all filtered processors are present on the page
+      for (const processor of filteredProcessors) {
+        cy.contains(`${processor.manufacturer} ${processor.model}`);
+      }
+
+      // Assert other unrelated processors are not present on the results
+      for (const processor of processors) {
+        if (!processor.model.includes(searchTerm)) {
+          cy.contains(`${processor.manufacturer} ${processor.model}`).should("not.exist");
+        }
+      }
+    });
+
+    it("no results should display a proper message", function () {
+      // Show the search bar
+      cy.contains("Search").click();
+
+      // Type on the field
+      cy.get("#search-bar-input").type("no results");
+
+      // Assert the message is being correctly displayed
+      cy.contains(/no cpus were found/i).should("be.visible");
+    });
   });
 });
