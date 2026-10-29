@@ -28,7 +28,10 @@ CPUs SQL displays a list with your favorite CPUs specifications, you can add, re
 
 ### Screenshots
 
-<img src="./img/web-ui.png" alt="CPUs SQL Web UI" width="400"/>
+<div style="display: flex; gap: 1rem;">
+  <img src="./img/web-ui.png" alt="CPUs SQL Web UI" height="350"/>
+  <img src="./img/data-table.png" alt="CPU data table" height="350"/>
+</div>
 
 
 ## ENV variables

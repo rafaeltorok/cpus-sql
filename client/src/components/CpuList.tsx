@@ -1,11 +1,12 @@
 // Components
-import Cpu from "./Cpu";
+import Cpu from "./Cpu/Cpu";
 
 // TypeScript types
 import type { CpuType } from "../types/types";
 
 interface CpuListProps {
   cpus: CpuType[];
+  updateCpu: (specs: CpuType) => Promise<boolean>;
   deleteCpu: (id: number, manufacturer: string, model: string) => void;
   showAll: boolean;
   scrollToIndex: (cpuTableId: string) => void;
@@ -16,6 +17,7 @@ interface CpuListProps {
 // Component
 export default function CpuList({
   cpus,
+  updateCpu,
   deleteCpu,
   showAll,
   scrollToIndex,
@@ -36,6 +38,7 @@ export default function CpuList({
             <Cpu
               key={cpu.id}
               cpu={cpu}
+              onUpdate={updateCpu}
               onDelete={deleteCpu}
               showAll={showAll}
             />

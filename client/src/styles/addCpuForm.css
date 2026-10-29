@@ -13,6 +13,7 @@
   height: 100%;
   padding: 1rem;
   font-size: 1.2rem;
+  margin-top: 1rem;
 }
 
 .add-cpu-field {
@@ -39,4 +40,5 @@
 
 .add-cpu-submit-button {
   padding: 0.75rem 2rem;
+  width: 100%;
 }

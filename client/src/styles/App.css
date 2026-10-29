@@ -44,16 +44,15 @@ button {
   background-color: black;
   font-size: 1rem;
   font-family: "digital-dreamers";
-  margin-top: 1rem;
-  border-style: outset;
+  border: 2px outset #303030;
+}
+
+button:hover {
+  background-color: #222222;
 }
 
 button:active {
-  background-color: black;
-  font-size: 1rem;
-  font-family: "digital-dreamers";
-  margin-top: 1rem;
-  color: #505050;
+  background-color: #303030;
   border-style: inset;
 }
 
@@ -71,18 +70,6 @@ button:active {
 
 [id^="intel-"] {
   border-color: rgba(0, 104, 181, 0.75); /* subtle transparent blue */
-}
-
-/* AMD-styled rows */
-[id^="amd-"] tbody th,
-[id^="amd-"] tbody td {
-  border-color: rgba(186, 0, 0, 0.25);
-}
-
-/* Intel-styled rows */
-[id^="intel-"] tbody th,
-[id^="intel-"] tbody td {
-  border-color: rgba(0, 104, 181, 0.25);
 }
 
 @media only screen and (hover: none) and (pointer: coarse) {

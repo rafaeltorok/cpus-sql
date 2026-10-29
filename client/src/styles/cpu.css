@@ -1,6 +1,7 @@
 .cpu-data-table {
   width: 100%;
-  max-width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
 }
 
 .cpu-data-table {
@@ -10,50 +11,83 @@
   border-style: double;
 }
 
-.cpu-data-table th,
-.cpu-data-table td {
-  border: 0.1rem solid black;
-  border-style: groove;
+.cpu-data-table tbody th,
+.cpu-data-table tbody td {
+  border: 0.1rem solid #121212;
   padding: 1.2rem;
   font-size: 0.9rem;
+  width: 50%;
+  border-collapse: collapse;
 }
 
-.cpu-data-table th {
-  background-color: rgba(18, 18, 18, 0.9);
+.cpu-data-table tbody th {
+  background-color: rgba(18, 18, 18, 0.5);
 }
 
-.cpu-data-table td {
-  background-color: rgba(0, 0, 0, 0.9);
+.cpu-data-table tbody td {
+  background-color: rgba(0, 0, 0, 0.5);
   font-weight: bold;
-  border-style: inset;
 }
 
-.cpu-data-table #delete-cpu-button {
-  border-bottom-left-radius: 1rem;
-  border-bottom-right-radius: 1rem;
-  background-color: rgba(5, 5, 5, 0.9);
-}
-
-.cpu-data-table thead tr:first-child th {
+.cpu-data-table thead th {
   width: 100%;
-  background-color: rgba(0, 0, 0, 0.9);
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 1.2rem;
   font-size: 1.4rem;
   font-weight: bold;
-  border-style: groove;
+  border-collapse: collapse;
   border-top-left-radius: 1rem;
   border-top-right-radius: 1rem;
 }
 
 .cpu-data-table .table-header {
   width: 100%;
-  background-color: rgba(5, 5, 5, 0.9);
+  background-color: rgba(5, 5, 5, 0.5);
   font-size: 1.2rem;
   font-weight: bold;
-  border-style: groove;
+  border-collapse: collapse;
 }
 
-.back-to-index-button,
+.show-hide-button {
+  width: 100%;
+  height: 100%;
+  padding: 1rem;
+  border-radius: 1rem;
+}
+
+.back-to-index-button {
+  width: 75%;
+  padding: 0.5rem 1rem;
+  border-bottom-right-radius: 1rem;
+  border-bottom-left-radius: 1rem;
+  margin-bottom: 2rem;
+}
+
+.show-hide-button:hover,
+.back-to-index-button:hover {
+  background-color: #222222;
+}
+
+.show-hide-button:active,
 .back-to-index-button:active {
-  margin-top: 0.1rem;
-  margin-bottom: 2.5rem;
+  background-color: #303030;
+  border-style: inset;
+}
+
+.edit-mode-row th,
+.edit-mode-row td {
+  width: 50%;
+}
+
+.cpu-data-table tbody .edit-mode-row td {
+  padding: 0;
+}
+
+.edit-input-field {
+  font-family: inherit;
+  width: 90%;
+  height: 100%;
+  padding: 0.25rem 0;
+  padding-left: 0.25rem;
+  box-sizing: border-box;
 }

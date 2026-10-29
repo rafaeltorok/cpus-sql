@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 
 // Components
 import CpuList from "./components/CpuList";
-import AddCpuForm from "./components/AddCpuForm";
+import AddCpuForm from "./components/AddForm/AddCpuForm";
 import PageIndex from "./components/PageIndex";
 import SearchBar from "./components/SearchBar";
 
@@ -89,6 +89,21 @@ export default function App() {
     }
   }
 
+  // Update a CPU specifications
+  async function updateCpu(newSpecs: CpuType): Promise<boolean> {
+    try {
+      const updatedData = await cpuService.update(newSpecs.id, newSpecs);
+
+      setCpus(cpus.map((c) => (c.id === newSpecs.id ? updatedData : c)));
+
+      // Return a confirmation that the operation succeeded
+      return true;
+    } catch (_exception) {
+      alert("Failed to update the CPU specs");
+      return false;
+    }
+  }
+
   // Remove a CPU from the list
   const deleteCpu = (id: number, manufacturer: string, model: string) => {
     const confirmDeletion = window.confirm(
@@ -162,6 +177,7 @@ export default function App() {
         </div>
         <CpuList
           cpus={filteredCpus}
+          updateCpu={updateCpu}
           deleteCpu={deleteCpu}
           showAll={showAll}
           scrollToIndex={scrollToIndex}
