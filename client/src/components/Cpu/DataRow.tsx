@@ -14,12 +14,15 @@ interface DataRowProps {
 
 // Render each data row inside the CPU table
 export default function DataRow({
-  rowName, rowData,
+  rowName,
+  rowData,
   cpuHeaderClass,
   editMode,
   type,
-  dataName, dataValue,
-  cpuData, setCpuData,
+  dataName,
+  dataValue,
+  cpuData,
+  setCpuData,
 }: DataRowProps) {
   function handleChange(value: string) {
     if (type === "text") {
@@ -34,9 +37,7 @@ export default function DataRow({
       {editMode ? (
         <tr className="edit-mode-row">
           <th>
-            <label htmlFor={`${dataName}-input`}>
-              {rowName}
-            </label>
+            <label htmlFor={`${dataName}-input`}>{rowName}</label>
           </th>
           <td>
             <input

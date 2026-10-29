@@ -11,7 +11,14 @@ interface TableControlsProps {
   onDelete: (id: number, manufacturer: string, model: string) => void;
 }
 
-export default function TableControls({ editMode, setEditMode, cpu, setCpuData, handleUpdate, onDelete}: TableControlsProps) {
+export default function TableControls({
+  editMode,
+  setEditMode,
+  cpu,
+  setCpuData,
+  handleUpdate,
+  onDelete,
+}: TableControlsProps) {
   return (
     <tfoot>
       {editMode ? (
@@ -39,10 +46,7 @@ export default function TableControls({ editMode, setEditMode, cpu, setCpuData, 
       ) : (
         <tr className="table-controls-row">
           <th>
-            <button
-              id="edit-mode-button"
-              onClick={() => setEditMode(true)}
-            >
+            <button id="edit-mode-button" onClick={() => setEditMode(true)}>
               Edit
             </button>
           </th>
@@ -57,5 +61,5 @@ export default function TableControls({ editMode, setEditMode, cpu, setCpuData, 
         </tr>
       )}
     </tfoot>
-  )
+  );
 }

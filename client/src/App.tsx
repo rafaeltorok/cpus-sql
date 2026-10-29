@@ -92,9 +92,9 @@ export default function App() {
   // Update a CPU specifications
   async function updateCpu(newSpecs: CpuType): Promise<boolean> {
     try {
-      const updatedData = await cpuService.update(newSpecs.id, newSpecs)
+      const updatedData = await cpuService.update(newSpecs.id, newSpecs);
 
-      setCpus(cpus.map((c) => c.id === newSpecs.id ? updatedData : c));
+      setCpus(cpus.map((c) => (c.id === newSpecs.id ? updatedData : c)));
 
       // Return a confirmation that the operation succeeded
       return true;
