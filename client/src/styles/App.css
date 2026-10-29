@@ -44,16 +44,14 @@ button {
   background-color: black;
   font-size: 1rem;
   font-family: "digital-dreamers";
-  margin-top: 1rem;
-  border-style: outset;
+}
+
+button:hover {
+  background-color: #222222;
 }
 
 button:active {
-  background-color: black;
-  font-size: 1rem;
-  font-family: "digital-dreamers";
-  margin-top: 1rem;
-  color: #505050;
+  background-color: #303030;
   border-style: inset;
 }
 

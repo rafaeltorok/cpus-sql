@@ -82,8 +82,9 @@ export default function Cpu({ cpu, onDelete, showAll }: CpuProps) {
           {renderRow("SOCKET", `${cpu.mbsocket}`, cpuHeaderClass)}
           {renderRow("TDP", cpu.tdp ? `${cpu.tdp} W` : "N/A", cpuHeaderClass)}
           <tr>
-            <td colSpan={2} id="delete-cpu-button">
+            <td colSpan={2}>
               <button
+                id="delete-cpu-button"
                 onClick={() => onDelete(cpu.id, cpu.manufacturer, cpu.model)}
               >
                 Delete

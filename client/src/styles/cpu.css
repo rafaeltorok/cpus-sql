@@ -52,8 +52,36 @@
   border-style: groove;
 }
 
+.show-hide-button,
+#delete-cpu-button {
+  width: 100%;
+  height: 100%;
+  padding: 1rem;
+  border-radius: 1rem;
+}
+
 .back-to-index-button,
 .back-to-index-button:active {
   margin-top: 0.1rem;
   margin-bottom: 2.5rem;
+}
+
+.back-to-index-button {
+  width: 90%;
+  padding: 0.5rem 1rem;
+  border-bottom-right-radius: 1rem;
+  border-bottom-left-radius: 1rem;
+}
+
+.show-hide-button:hover,
+#delete-cpu-button:hover,
+.back-to-index-button:hover {
+  background-color: #222222;
+}
+
+.show-hide-button:active,
+#delete-cpu-button:active,
+.back-to-index-button:active {
+  background-color: #303030;
+  border-style: inset;
 }
