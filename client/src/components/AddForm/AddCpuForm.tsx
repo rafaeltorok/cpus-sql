@@ -5,10 +5,10 @@ import { useState } from "react";
 import FormRow from "./FormRow";
 
 // CSS styles
-import "../styles/addCpuForm.css";
+import "../../styles/addCpuForm.css";
 
 // TypeScript types
-import type { InputData, NewCpu } from "../types/types";
+import type { InputData, NewCpu } from "../../types/types";
 
 interface AddCpuFormProps {
   addCpu: (cpu: NewCpu) => Promise<boolean>;

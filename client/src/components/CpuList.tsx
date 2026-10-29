@@ -1,5 +1,5 @@
 // Components
-import Cpu from "./Cpu";
+import Cpu from "./Cpu/Cpu";
 
 // TypeScript types
 import type { CpuType } from "../types/types";

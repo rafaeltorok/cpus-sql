@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 
 // Components
 import CpuList from "./components/CpuList";
-import AddCpuForm from "./components/AddCpuForm";
+import AddCpuForm from "./components/AddForm/AddCpuForm";
 import PageIndex from "./components/PageIndex";
 import SearchBar from "./components/SearchBar";
 

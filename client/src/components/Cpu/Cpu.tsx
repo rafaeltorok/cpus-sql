@@ -2,10 +2,10 @@
 import { useState, useEffect } from "react";
 
 // CSS styles
-import "../styles/cpu.css";
+import "../../styles/cpu.css";
 
 // TypeScript types
-import type { CpuType } from "../types/types";
+import type { CpuType } from "../../types/types";
 
 interface CpuProps {
   cpu: CpuType;
