@@ -1,4 +1,5 @@
-.popup-container {
+.dialog-container {
+  max-width: 400px;
   background-color: rgba(0, 0, 0, 0.5);
   color: white;
   border: 2px solid gray;
@@ -9,12 +10,17 @@
   transform: translateY(-100%);
 }
 
-.popup-container::backdrop {
+.dialog-container::backdrop {
   background-color: rgba(0, 0, 0, 0.5);
 }
 
-.popup-message {
+.dialog-message {
   font-size: large;
   font-weight: bold;
+  padding: 1rem;
+}
+
+.dialog-button {
+  width: 100%;
   padding: 1rem;
 }
