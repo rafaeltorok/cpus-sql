@@ -25,3 +25,12 @@
   width: 100%;
   padding: 1rem;
 }
+
+.dialog-buttons-wrapper {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.dialog-buttons-wrapper button {
+  width: 50%;
+}

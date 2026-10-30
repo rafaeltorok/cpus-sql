@@ -44,6 +44,9 @@ export default function App() {
   const [showNotification, setShowNotification] = useState<boolean>(false);
   const [message, setMessage] = useState<string>("");
 
+  // Displays a dialog message to confirm a CPU removal
+  const [showConfirmDialog, setShowConfirmDialog] = useState<boolean>(false);
+
   // Fetch the initial CPUs data
   useEffect(() => {
     const fetchData = async () => {
@@ -136,33 +139,23 @@ export default function App() {
   }
 
   // Remove a CPU from the list
-  async function deleteCpu(id: number, manufacturer: string, model: string) {
+  async function deleteCpu(cpuToRemove: CpuType) {
     try {
-      // Confirmation dialog before removing it
-      const confirmDeletion = window.confirm(
-        `Remove ${manufacturer} ${model} from the list?`,
-      );
+      setMessage("Removing CPU from the database, please wait...");
+      setRequestLoading(true);
 
-      // Remove the CPU from the database
-      if (confirmDeletion) {
-        setMessage("Removing CPU from the database, please wait...");
-        setRequestLoading(true);
+      await cpuService.remove(cpuToRemove.id);
+        
+      // Remove the CPU from the current list
+      setCpus(cpus.filter((cpu: CpuType) => cpu.id !== cpuToRemove.id));
 
-        await cpuService.remove(id);
-          
-        // Remove the CPU from the current list
-        setCpus(cpus.filter((cpu: CpuType) => cpu.id !== id));
-
-        setRequestLoading(false);
-        setMessage(`${manufacturer} ${model} was removed`);
-        setShowNotification(true);
-        return true;
-      } else {
-        return false;
-      }
+      setRequestLoading(false);
+      setMessage(`${cpuToRemove.manufacturer} ${cpuToRemove.model} was removed`);
+      setShowNotification(true);
+      return true;
     } catch (_exception) {
       setRequestLoading(false);
-      setMessage(`Failed to remove ${manufacturer} ${model}`);
+      setMessage(`Failed to remove ${cpuToRemove.manufacturer} ${cpuToRemove.model}`);
       setShowNotification(true);
       return false;
     }
@@ -241,6 +234,8 @@ export default function App() {
             loading={loading}
             error={error}
             requestLoading={requestLoading}
+            showConfirmDialog={showConfirmDialog}
+            setShowConfirmDialog={setShowConfirmDialog}
           />
         </section>
       </main>

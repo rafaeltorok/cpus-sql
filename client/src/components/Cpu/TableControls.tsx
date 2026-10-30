@@ -8,12 +8,8 @@ interface TableControlsProps {
   cpu: CpuType;
   setCpuData: (data: CpuType) => void;
   handleUpdate: () => Promise<void>;
-  onDelete: (
-    id: number,
-    manufacturer: string,
-    model: string,
-  ) => Promise<boolean>;
   requestLoading: boolean;
+  setShowConfirmDialog: (show: boolean) => void;
 }
 
 export default function TableControls({
@@ -22,8 +18,8 @@ export default function TableControls({
   cpu,
   setCpuData,
   handleUpdate,
-  onDelete,
   requestLoading,
+  setShowConfirmDialog,
 }: TableControlsProps) {
   return (
     <tfoot>
@@ -65,7 +61,7 @@ export default function TableControls({
           <td>
             <button
               id="delete-cpu-button"
-              onClick={() => void onDelete(cpu.id, cpu.manufacturer, cpu.model)}
+              onClick={() => setShowConfirmDialog(true)}
               disabled={requestLoading}
             >
               Delete

@@ -7,16 +7,14 @@ import type { CpuType } from "../types/types";
 interface CpuListProps {
   cpus: CpuType[];
   updateCpu: (specs: CpuType) => Promise<boolean>;
-  deleteCpu: (
-    id: number,
-    manufacturer: string,
-    model: string,
-  ) => Promise<boolean>;
+  deleteCpu: (cpu: CpuType) => Promise<boolean>;
   showAll: boolean;
   scrollToIndex: (cpuTableId: string) => void;
   loading: boolean;
   error: string;
   requestLoading: boolean;
+  showConfirmDialog: boolean;
+  setShowConfirmDialog: (show: boolean) => void;
 }
 
 // Component
@@ -29,6 +27,8 @@ export default function CpuList({
   loading,
   error,
   requestLoading,
+  showConfirmDialog,
+  setShowConfirmDialog,
 }: CpuListProps) {
   if (loading) return <h2>Loading CPUs, please wait...</h2>;
 
@@ -48,6 +48,8 @@ export default function CpuList({
               onDelete={deleteCpu}
               showAll={showAll}
               requestLoading={requestLoading}
+              showConfirmDialog={showConfirmDialog}
+              setShowConfirmDialog={setShowConfirmDialog}
             />
             <button
               className="back-to-index-button"
