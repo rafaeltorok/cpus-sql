@@ -1,29 +1,33 @@
 import { useEffect, useRef } from "react";
 
-import "../styles/popupMessage.css";
+import "../../styles/messages.css";
 
-interface PopupMessageProps {
-  requestLoading: boolean;
+interface LoadingMessageProps {
+  showMessage: boolean;
+  message: string;
 }
 
-export default function PopupMessage({ requestLoading }: PopupMessageProps) {
+export default function LoadingMessage({
+  showMessage,
+  message,
+}: LoadingMessageProps) {
   const ref = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {
-    if (requestLoading) {
+    if (showMessage) {
       ref.current?.showModal();
     } else {
       ref.current?.close();
     }
-  }, [requestLoading]);
+  }, [showMessage]);
 
   return (
     <dialog
-      className="popup-container"
+      className="dialog-container"
       ref={ref}
       onCancel={(e) => e.preventDefault()} // stop Esc from closing it mid-load
     >
-      <p className="popup-message">Sending request, please wait...</p>
+      <p className="dialog-message">{message}</p>
     </dialog>
   );
 }

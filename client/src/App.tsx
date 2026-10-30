@@ -6,7 +6,8 @@ import CpuList from "./components/CpuList";
 import AddCpuForm from "./components/AddForm/AddCpuForm";
 import PageIndex from "./components/PageIndex";
 import SearchBar from "./components/SearchBar";
-import PopupMessage from "./components/PopupMessage";
+import LoadingMessage from "./components/DialogMessages/LoadingMessage";
+import NotificationMessage from "./components/DialogMessages/NotificationMessage";
 
 // Services
 import cpuService from "./services/cpus";
@@ -39,10 +40,19 @@ export default function App() {
   // Displays a popup dialog loading message when sending API requests
   const [requestLoading, setRequestLoading] = useState<boolean>(false);
 
+  // Handles displaying a notification message with a close button
+  const [showNotification, setShowNotification] = useState<boolean>(false);
+  const [message, setMessage] = useState<string>("");
+
+  // Displays a dialog message to confirm a CPU removal
+  const [showConfirmDialog, setShowConfirmDialog] = useState<boolean>(false);
+
   // Fetch the initial CPUs data
   useEffect(() => {
     const fetchData = async () => {
       try {
+        setRequestLoading(true);
+        setMessage("Loading CPUs data, please wait...");
         setLoading(true);
         const response = await fetch(baseUrl);
         if (!response.ok)
@@ -57,6 +67,7 @@ export default function App() {
         }
       } finally {
         setLoading(false);
+        setRequestLoading(false);
       }
     };
     void fetchData();
@@ -65,6 +76,7 @@ export default function App() {
   // Add a new CPU using the data from the add form
   async function addCpu(cpuObject: NewCpu): Promise<boolean> {
     try {
+      setMessage("Submitting data, please wait...");
       setRequestLoading(true);
 
       // Check if the data is valid before sending it to the server
@@ -79,7 +91,9 @@ export default function App() {
         cpuObject.architecture === "" ||
         cpuObject.mbsocket === ""
       ) {
-        alert("Invalid CPU data");
+        setMessage("Invalid CPU data");
+        setRequestLoading(false);
+        setShowNotification(true);
         return false;
       }
 
@@ -89,22 +103,26 @@ export default function App() {
       // Update the Web UI to contain the new object
       setCpus((prevCpus: CpuType[]) => [...prevCpus, returnedObject]); // Functional update for state
 
-      alert(
+      // Show a confirmation message on success
+      setMessage(
         `${returnedObject.manufacturer} ${returnedObject.model} was added!`,
       );
+      setRequestLoading(false);
+      setShowNotification(true);
 
       return true;
     } catch (_err: unknown) {
-      alert("Failed to add new CPU");
-      return false;
-    } finally {
+      setMessage("Failed to add new CPU");
       setRequestLoading(false);
+      setShowNotification(true);
+      return false;
     }
   }
 
   // Update a CPU specifications
   async function updateCpu(newSpecs: CpuType): Promise<boolean> {
     try {
+      setMessage("Updating specs, please wait...");
       setRequestLoading(true);
 
       // Send an API request to update the specs
@@ -112,44 +130,40 @@ export default function App() {
 
       // Update the current CPU list with the updated returned object
       setCpus(cpus.map((c) => (c.id === newSpecs.id ? updatedData : c)));
+      setRequestLoading(false);
       return true;
     } catch (_exception) {
-      alert("Failed to update the CPU specs");
-      return false;
-    } finally {
       setRequestLoading(false);
+      setMessage("Failed to update the CPU specs");
+      setShowNotification(true);
+      return false;
     }
   }
 
   // Remove a CPU from the list
-  async function deleteCpu(id: number, manufacturer: string, model: string) {
+  async function deleteCpu(cpuToRemove: CpuType) {
     try {
+      setMessage("Removing CPU from the database, please wait...");
       setRequestLoading(true);
 
-      // Confirmation dialog before removing it
-      const confirmDeletion = window.confirm(
-        `Remove ${manufacturer} ${model} from the list?`,
+      await cpuService.remove(cpuToRemove.id);
+
+      // Remove the CPU from the current list
+      setCpus(cpus.filter((cpu: CpuType) => cpu.id !== cpuToRemove.id));
+
+      setRequestLoading(false);
+      setMessage(
+        `${cpuToRemove.manufacturer} ${cpuToRemove.model} was removed`,
       );
-
-      // Remove the CPU from the database
-      if (confirmDeletion) {
-        await cpuService
-          .remove(id)
-          .then(() => {
-            // Remove the CPU from the state
-            setCpus(cpus.filter((cpu: CpuType) => cpu.id !== id));
-          })
-          .catch((_exception) => {
-            alert("Failed to remove CPU");
-          });
-      }
-
+      setShowNotification(true);
       return true;
     } catch (_exception) {
-      alert(`Failed to remove ${manufacturer} ${model}`);
-      return false;
-    } finally {
       setRequestLoading(false);
+      setMessage(
+        `Failed to remove ${cpuToRemove.manufacturer} ${cpuToRemove.model}`,
+      );
+      setShowNotification(true);
+      return false;
     }
   }
 
@@ -226,11 +240,19 @@ export default function App() {
             loading={loading}
             error={error}
             requestLoading={requestLoading}
+            showConfirmDialog={showConfirmDialog}
+            setShowConfirmDialog={setShowConfirmDialog}
           />
         </section>
-
-        <PopupMessage requestLoading={requestLoading} />
       </main>
+
+      {/* Dialog messages */}
+      <LoadingMessage showMessage={requestLoading} message={message} />
+      <NotificationMessage
+        showMessage={showNotification}
+        setShowMessage={setShowNotification}
+        message={message}
+      />
     </div>
   );
 }
