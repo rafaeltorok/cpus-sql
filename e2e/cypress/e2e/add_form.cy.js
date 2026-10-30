@@ -41,7 +41,7 @@ describe("the Add Processor form", function () {
       cy.get('[open=""] > .dialog-message').contains(
         `${processor.manufacturer} ${processor.model} was added`
       );
-      cy.get('.dialog-button').click();  // Close the notification
+      cy.get('[open=""] > .dialog-button').click();  // Close the notification
 
       // Assert the processor is present on the list
       cy.contains(`${processor.manufacturer} ${processor.model}`);
@@ -76,9 +76,9 @@ describe("the Add Processor form", function () {
 
       // Confirm the message on the notification dialog is correct
       cy.get('[open=""] > .dialog-message').contains(
-        `${processor.manufacturer} ${processor.model} was added`
+        `${processor.manufacturer} ${processor.model} was added!`
       );
-      cy.get('.dialog-button').click();  // Close the notification
+      cy.get('[open=""] > .dialog-button').click();  // Close the notification
 
       // Assert the correct specs are present on the page
       showCpuData(`${processor.manufacturer} ${processor.model}`);
