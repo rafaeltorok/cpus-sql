@@ -138,9 +138,6 @@ export default function App() {
   // Remove a CPU from the list
   async function deleteCpu(id: number, manufacturer: string, model: string) {
     try {
-      setMessage("Removing CPU from the database, please wait...");
-      setRequestLoading(true);
-
       // Confirmation dialog before removing it
       const confirmDeletion = window.confirm(
         `Remove ${manufacturer} ${model} from the list?`,
@@ -148,7 +145,10 @@ export default function App() {
 
       // Remove the CPU from the database
       if (confirmDeletion) {
-        await cpuService.remove(id)
+        setMessage("Removing CPU from the database, please wait...");
+        setRequestLoading(true);
+
+        await cpuService.remove(id);
           
         // Remove the CPU from the current list
         setCpus(cpus.filter((cpu: CpuType) => cpu.id !== id));
@@ -158,7 +158,6 @@ export default function App() {
         setShowNotification(true);
         return true;
       } else {
-        setRequestLoading(false);
         return false;
       }
     } catch (_exception) {
