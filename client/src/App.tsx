@@ -6,6 +6,7 @@ import CpuList from "./components/CpuList";
 import AddCpuForm from "./components/AddForm/AddCpuForm";
 import PageIndex from "./components/PageIndex";
 import SearchBar from "./components/SearchBar";
+import PopupMessage from "./components/PopupMessage";
 
 // Services
 import cpuService from "./services/cpus";
@@ -21,13 +22,22 @@ export default function App() {
   // Set the API server URL
   const baseUrl = "/api/cpus";
 
-  // React states
+  // Handles the initial loading state for all CPUs data
   const [cpus, setCpus] = useState<CpuType[]>([]);
   const [error, setError] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
-  const [showAll, setShowAll] = useState<boolean>(false); // Controls the visibility of all tables
+
+  // Controls the visibility for all tables
+  const [showAll, setShowAll] = useState<boolean>(false);
+
+  // Handles the search term within the search bar
   const [searchTerm, setSearchTerm] = useState<string>("");
+
+  // Controls the add form visibility
   const [showAddForm, setShowAddForm] = useState<boolean>(false);
+
+  // Displays a popup dialog loading message when sending API requests
+  const [requestLoading, setRequestLoading] = useState<boolean>(false);
 
   // Fetch the initial CPUs data
   useEffect(() => {
@@ -55,6 +65,8 @@ export default function App() {
   // Add a new CPU using the data from the add form
   async function addCpu(cpuObject: NewCpu): Promise<boolean> {
     try {
+      setRequestLoading(true);
+
       // Check if the data is valid before sending it to the server
       if (
         cpuObject.manufacturer === "" ||
@@ -81,47 +93,65 @@ export default function App() {
         `${returnedObject.manufacturer} ${returnedObject.model} was added!`,
       );
 
-      // If successful, return a confirmation variable
       return true;
     } catch (_err: unknown) {
       alert("Failed to add new CPU");
       return false;
+    } finally {
+      setRequestLoading(false);
     }
   }
 
   // Update a CPU specifications
   async function updateCpu(newSpecs: CpuType): Promise<boolean> {
     try {
+      setRequestLoading(true);
+
+      // Send an API request to update the specs
       const updatedData = await cpuService.update(newSpecs.id, newSpecs);
 
+      // Update the current CPU list with the updated returned object
       setCpus(cpus.map((c) => (c.id === newSpecs.id ? updatedData : c)));
-
-      // Return a confirmation that the operation succeeded
       return true;
     } catch (_exception) {
       alert("Failed to update the CPU specs");
       return false;
+    } finally {
+      setRequestLoading(false);
     }
   }
 
   // Remove a CPU from the list
-  const deleteCpu = (id: number, manufacturer: string, model: string) => {
-    const confirmDeletion = window.confirm(
-      `Remove ${manufacturer} ${model} from the list?`,
-    );
+  async function deleteCpu(id: number, manufacturer: string, model: string) {
+    try {
+      setRequestLoading(true);
 
-    if (confirmDeletion) {
-      cpuService
-        .remove(id)
-        .then(() => {
-          // Remove the CPU from the state
-          setCpus(cpus.filter((cpu: CpuType) => cpu.id !== id));
-        })
-        .catch((_exception) => {
-          alert("Failed to remove CPU");
-        });
+      // Confirmation dialog before removing it
+      const confirmDeletion = window.confirm(
+        `Remove ${manufacturer} ${model} from the list?`,
+      );
+
+      // Remove the CPU from the database
+      if (confirmDeletion) {
+        await cpuService
+          .remove(id)
+          .then(() => {
+            // Remove the CPU from the state
+            setCpus(cpus.filter((cpu: CpuType) => cpu.id !== id));
+          })
+          .catch((_exception) => {
+            alert("Failed to remove CPU");
+          });
+      }
+
+      return true;
+    } catch (_exception) {
+      alert(`Failed to remove ${manufacturer} ${model}`);
+      return false;
+    } finally {
+      setRequestLoading(false);
     }
-  };
+  }
 
   // Scroll the page to the respective data table
   function scrollToIndex(cpuTableId: string): void {
@@ -159,32 +189,48 @@ export default function App() {
   });
 
   return (
-    <>
-      <div>
+    <div>
+      <header>
         <h1 id="main-page-title">CPU Manager</h1>{" "}
-        {/* Add ref to the <h1> element */}
+      </header>
+
+      {/* Main page controls section */}
+      <nav>
         <AddCpuForm
           addCpu={addCpu}
           showAddForm={showAddForm}
           setShowAddForm={setShowAddForm}
+          requestLoading={requestLoading}
         />
+
         <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+
         <PageIndex cpusData={filteredCpus} />
+
         <div id="show-all-button" className="button-area">
           <button onClick={() => setShowAll((prev) => !prev)}>
             {showAll ? "Hide all data" : "Show all data"}
           </button>
         </div>
-        <CpuList
-          cpus={filteredCpus}
-          updateCpu={updateCpu}
-          deleteCpu={deleteCpu}
-          showAll={showAll}
-          scrollToIndex={scrollToIndex}
-          loading={loading}
-          error={error}
-        />
-      </div>
-    </>
+      </nav>
+
+      {/* CPUs section */}
+      <main>
+        <section>
+          <CpuList
+            cpus={filteredCpus}
+            updateCpu={updateCpu}
+            deleteCpu={deleteCpu}
+            showAll={showAll}
+            scrollToIndex={scrollToIndex}
+            loading={loading}
+            error={error}
+            requestLoading={requestLoading}
+          />
+        </section>
+
+        <PopupMessage requestLoading={requestLoading} />
+      </main>
+    </div>
   );
 }

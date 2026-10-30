@@ -7,11 +7,16 @@ import type { CpuType } from "../types/types";
 interface CpuListProps {
   cpus: CpuType[];
   updateCpu: (specs: CpuType) => Promise<boolean>;
-  deleteCpu: (id: number, manufacturer: string, model: string) => void;
+  deleteCpu: (
+    id: number,
+    manufacturer: string,
+    model: string,
+  ) => Promise<boolean>;
   showAll: boolean;
   scrollToIndex: (cpuTableId: string) => void;
   loading: boolean;
   error: string;
+  requestLoading: boolean;
 }
 
 // Component
@@ -23,6 +28,7 @@ export default function CpuList({
   scrollToIndex,
   loading,
   error,
+  requestLoading,
 }: CpuListProps) {
   if (loading) return <h2>Loading CPUs, please wait...</h2>;
 
@@ -41,6 +47,7 @@ export default function CpuList({
               onUpdate={updateCpu}
               onDelete={deleteCpu}
               showAll={showAll}
+              requestLoading={requestLoading}
             />
             <button
               className="back-to-index-button"

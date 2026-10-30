@@ -11,12 +11,23 @@ import type { CpuType } from "../../types/types";
 interface CpuProps {
   cpu: CpuType;
   onUpdate: (specs: CpuType) => Promise<boolean>;
-  onDelete: (id: number, manufacturer: string, model: string) => void;
+  onDelete: (
+    id: number,
+    manufacturer: string,
+    model: string,
+  ) => Promise<boolean>;
   showAll: boolean;
+  requestLoading: boolean;
 }
 
 // Component
-export default function Cpu({ cpu, onUpdate, onDelete, showAll }: CpuProps) {
+export default function Cpu({
+  cpu,
+  onUpdate,
+  onDelete,
+  showAll,
+  requestLoading,
+}: CpuProps) {
   const [showBody, setShowBody] = useState(false);
   const [editMode, setEditMode] = useState(false);
 
@@ -33,11 +44,8 @@ export default function Cpu({ cpu, onUpdate, onDelete, showAll }: CpuProps) {
   async function handleUpdate(): Promise<void> {
     const confirm = await onUpdate(cpuData);
 
-    // If the update fails, reset the specs to the original values
-    if (!confirm) {
-      setCpuData(cpu);
-    } else {
-      // Only leave the edit mode if the update succeeds
+    // Only leave the edit mode if the update succeeds
+    if (!requestLoading && confirm) {
       setEditMode(false);
     }
   }
@@ -167,6 +175,7 @@ export default function Cpu({ cpu, onUpdate, onDelete, showAll }: CpuProps) {
             setCpuData={setCpuData}
             handleUpdate={handleUpdate}
             onDelete={onDelete}
+            requestLoading={requestLoading}
           />
         </>
       )}
