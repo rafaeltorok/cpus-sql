@@ -37,6 +37,12 @@ describe("the Add Processor form", function () {
       // Submit the data
       cy.contains(/submit/i).click();
 
+      // Confirm the message on the notification dialog is correct
+      cy.get('[open=""] > .dialog-message').contains(
+        `${processor.manufacturer} ${processor.model} was added`
+      );
+      cy.get('.dialog-button').click();  // Close the notification
+
       // Assert the processor is present on the list
       cy.contains(`${processor.manufacturer} ${processor.model}`);
 
@@ -68,6 +74,12 @@ describe("the Add Processor form", function () {
       // Submit the data
       cy.contains(/submit/i).click();
 
+      // Confirm the message on the notification dialog is correct
+      cy.get('[open=""] > .dialog-message').contains(
+        `${processor.manufacturer} ${processor.model} was added`
+      );
+      cy.get('.dialog-button').click();  // Close the notification
+
       // Assert the correct specs are present on the page
       showCpuData(`${processor.manufacturer} ${processor.model}`);
       checkRowData(/cores \/ threads/i, `${processor.cores} / ${processor.threads}`);
@@ -92,12 +104,12 @@ describe("the Add Processor form", function () {
       // Submit the data
       cy.contains(/submit/i).click();
 
-      // Assert there is a warning about the invalid data
-      cy.on("window:alert", (alertText) => {
-        expect(alertText).to.match(/invalid cpu data/i);
-      }).then(() => {
-        cy.get(processors[0].model).should("not.exist");
-      });
+      // Confirm there is a warning about the invalid data
+      cy.get('[open=""] > .dialog-message').contains(/invalid cpu data/i);
+      cy.get('.dialog-button').click();  // Close the notification
+      
+      // Confirm the processor was not added
+      cy.get(processors[0].model).should("not.exist");
     });
 
     it("negative values", function () {
@@ -112,12 +124,12 @@ describe("the Add Processor form", function () {
       // Submit the data
       cy.contains(/submit/i).click();
 
-      // Assert there is a warning about the invalid data
-      cy.on("window:alert", (alertText) => {
-        expect(alertText).to.match(/invalid cpu data/i);
-      }).then(() => {
-        cy.get(processors[0].model).should("not.exist");
-      });
+      // Confirm there is a warning about the invalid data
+      cy.get('[open=""] > .dialog-message').contains(/invalid cpu data/i);
+      cy.get('.dialog-button').click();  // Close the notification
+      
+      // Confirm the processor was not added
+      cy.get(processors[0].model).should("not.exist");
     });
 
     it("invalid clock speeds", function () {
@@ -131,12 +143,12 @@ describe("the Add Processor form", function () {
       // Submit the data
       cy.contains(/submit/i).click();
 
-      // Assert there is a warning about the invalid data
-      cy.on("window:alert", (alertText) => {
-        expect(alertText).to.match(/invalid cpu data/i);
-      }).then(() => {
-        cy.get(processors[0].model).should("not.exist");
-      });
+      // Confirm there is a warning about the invalid data
+      cy.get('[open=""] > .dialog-message').contains(/invalid cpu data/i);
+      cy.get('.dialog-button').click();  // Close the notification
+      
+      // Confirm the processor was not added
+      cy.get(processors[0].model).should("not.exist");
     });
 
     it("zero as specs values", function () {
@@ -150,12 +162,12 @@ describe("the Add Processor form", function () {
       // Submit the data
       cy.contains(/submit/i).click();
 
-      // Assert there is a warning about the invalid data
-      cy.on("window:alert", (alertText) => {
-        expect(alertText).to.match(/invalid cpu data/i);
-      }).then(() => {
-        cy.get(processors[0].model).should("not.exist");
-      });
+      // Confirm there is a warning about the invalid data
+      cy.get('[open=""] > .dialog-message').contains(/invalid cpu data/i);
+      cy.get('.dialog-button').click();  // Close the notification
+      
+      // Confirm the processor was not added
+      cy.get(processors[0].model).should("not.exist");
     });
 
     it("non-numeric values", function () {
@@ -170,12 +182,12 @@ describe("the Add Processor form", function () {
       // Submit the data
       cy.contains(/submit/i).click();
 
-      // Assert there is a warning about the invalid data
-      cy.on("window:alert", (alertText) => {
-        expect(alertText).to.match(/invalid cpu data/i);
-      }).then(() => {
-        cy.get(processors[0].model).should("not.exist");
-      });
+      // Confirm there is a warning about the invalid data
+      cy.get('[open=""] > .dialog-message').contains(/invalid cpu data/i);
+      cy.get('.dialog-button').click();  // Close the notification
+      
+      // Confirm the processor was not added
+      cy.get(processors[0].model).should("not.exist");
     });
   });
 });
