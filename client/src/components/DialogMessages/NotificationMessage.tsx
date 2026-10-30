@@ -11,7 +11,7 @@ interface NotificationMessageProps {
 export default function NotificationMessage({
   showMessage,
   setShowMessage,
-  message
+  message,
 }: NotificationMessageProps) {
   const ref = useRef<HTMLDialogElement>(null);
 
@@ -30,10 +30,7 @@ export default function NotificationMessage({
       onCancel={(e) => e.preventDefault()} // stop Esc from closing it mid-load
     >
       <p className="dialog-message">{message}</p>
-      <button
-        className="dialog-button"
-        onClick={() => setShowMessage(false)}
-      >
+      <button className="dialog-button" onClick={() => setShowMessage(false)}>
         Close
       </button>
     </dialog>

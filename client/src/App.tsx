@@ -104,7 +104,9 @@ export default function App() {
       setCpus((prevCpus: CpuType[]) => [...prevCpus, returnedObject]); // Functional update for state
 
       // Show a confirmation message on success
-      setMessage(`${returnedObject.manufacturer} ${returnedObject.model} was added!`);
+      setMessage(
+        `${returnedObject.manufacturer} ${returnedObject.model} was added!`,
+      );
       setRequestLoading(false);
       setShowNotification(true);
 
@@ -145,17 +147,21 @@ export default function App() {
       setRequestLoading(true);
 
       await cpuService.remove(cpuToRemove.id);
-        
+
       // Remove the CPU from the current list
       setCpus(cpus.filter((cpu: CpuType) => cpu.id !== cpuToRemove.id));
 
       setRequestLoading(false);
-      setMessage(`${cpuToRemove.manufacturer} ${cpuToRemove.model} was removed`);
+      setMessage(
+        `${cpuToRemove.manufacturer} ${cpuToRemove.model} was removed`,
+      );
       setShowNotification(true);
       return true;
     } catch (_exception) {
       setRequestLoading(false);
-      setMessage(`Failed to remove ${cpuToRemove.manufacturer} ${cpuToRemove.model}`);
+      setMessage(
+        `Failed to remove ${cpuToRemove.manufacturer} ${cpuToRemove.model}`,
+      );
       setShowNotification(true);
       return false;
     }
@@ -241,10 +247,7 @@ export default function App() {
       </main>
 
       {/* Dialog messages */}
-      <LoadingMessage
-        showMessage={requestLoading}
-        message={message}
-      />
+      <LoadingMessage showMessage={requestLoading} message={message} />
       <NotificationMessage
         showMessage={showNotification}
         setShowMessage={setShowNotification}

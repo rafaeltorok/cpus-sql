@@ -40,10 +40,7 @@ export default function ConfirmMessage({
         >
           Confirm
         </button>
-        <button
-          className="dialog-button"
-          onClick={() => setShowMessage(false)}
-        >
+        <button className="dialog-button" onClick={() => setShowMessage(false)}>
           Cancel
         </button>
       </div>

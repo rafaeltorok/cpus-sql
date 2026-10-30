@@ -7,7 +7,10 @@ interface LoadingMessageProps {
   message: string;
 }
 
-export default function LoadingMessage({ showMessage, message }: LoadingMessageProps) {
+export default function LoadingMessage({
+  showMessage,
+  message,
+}: LoadingMessageProps) {
   const ref = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {
