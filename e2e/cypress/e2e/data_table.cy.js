@@ -44,14 +44,23 @@ describe("testing the CPU data table", function () {
     checkRowData(/tdp/i, `${processor.tdp} W`);
   });
 
-  it("the processor can be removed", function () {
+  it("a processor can be removed", function () {
     const processor = processors.find((p) => p.model === "Ryzen 5 5600X");
 
     // Expand the data table
     showCpuData(`${processor.manufacturer} ${processor.model}`);
 
     // Select the Delete button
-    cy.contains("Delete").click();
+    cy.get('#delete-cpu-button').click();
+
+    // Confirm the removal within the dialog message
+    cy.get('.dialog-buttons-wrapper > :nth-child(1)').click();
+
+    // Assert a proper notification message is displayed
+      cy.get('[open=""] > .dialog-message').contains(
+        `${processor.manufacturer} ${processor.model} was removed`
+      );
+      cy.get('.dialog-button').click();  // Close the notification
 
     // Confirm the data table has been removed from the list
     cy.get(`${processor.manufacturer} ${processor.model}`).should("not.exist");
