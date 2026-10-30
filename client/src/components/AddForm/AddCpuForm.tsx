@@ -14,6 +14,7 @@ interface AddCpuFormProps {
   addCpu: (cpu: NewCpu) => Promise<boolean>;
   showAddForm: boolean;
   setShowAddForm: React.Dispatch<React.SetStateAction<boolean>>;
+  requestLoading: boolean;
 }
 
 type Event = React.ChangeEvent<HTMLInputElement>;
@@ -23,6 +24,7 @@ export default function AddCpuForm({
   addCpu,
   showAddForm,
   setShowAddForm,
+  requestLoading,
 }: AddCpuFormProps) {
   const [cpuSpecs, setCpuSpecs] = useState<InputData>({
     manufacturer: "",
@@ -44,7 +46,7 @@ export default function AddCpuForm({
     event.preventDefault();
 
     // Add the CPU
-    const response = await addCpu({
+    const confirm = await addCpu({
       manufacturer: cpuSpecs.manufacturer.trim(),
       model: cpuSpecs.model.trim(),
       cores: Number(cpuSpecs.cores),
@@ -58,7 +60,7 @@ export default function AddCpuForm({
     });
 
     // If the CPU was successfully added, close the form and clear the input data
-    if (response) {
+    if (!requestLoading && confirm) {
       setCpuSpecs({
         manufacturer: "",
         model: "",
@@ -216,7 +218,11 @@ export default function AddCpuForm({
               />
 
               <div className="form-row">
-                <button className="add-cpu-submit-button" type="submit">
+                <button
+                  className="add-cpu-submit-button"
+                  type="submit"
+                  disabled={requestLoading}
+                >
                   Submit
                 </button>
               </div>

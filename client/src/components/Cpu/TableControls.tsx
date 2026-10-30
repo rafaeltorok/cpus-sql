@@ -8,7 +8,12 @@ interface TableControlsProps {
   cpu: CpuType;
   setCpuData: (data: CpuType) => void;
   handleUpdate: () => Promise<void>;
-  onDelete: (id: number, manufacturer: string, model: string) => void;
+  onDelete: (
+    id: number,
+    manufacturer: string,
+    model: string,
+  ) => Promise<boolean>;
+  requestLoading: boolean;
 }
 
 export default function TableControls({
@@ -18,6 +23,7 @@ export default function TableControls({
   setCpuData,
   handleUpdate,
   onDelete,
+  requestLoading,
 }: TableControlsProps) {
   return (
     <tfoot>
@@ -27,6 +33,7 @@ export default function TableControls({
             <button
               id="confirm-edit-button"
               onClick={() => void handleUpdate()}
+              disabled={requestLoading}
             >
               Confirm
             </button>
@@ -38,6 +45,7 @@ export default function TableControls({
                 setEditMode(false);
                 setCpuData(cpu);
               }}
+              disabled={requestLoading}
             >
               Cancel
             </button>
@@ -46,14 +54,19 @@ export default function TableControls({
       ) : (
         <tr className="table-controls-row">
           <th>
-            <button id="edit-mode-button" onClick={() => setEditMode(true)}>
+            <button
+              id="edit-mode-button"
+              onClick={() => setEditMode(true)}
+              disabled={requestLoading}
+            >
               Edit
             </button>
           </th>
           <td>
             <button
               id="delete-cpu-button"
-              onClick={() => onDelete(cpu.id, cpu.manufacturer, cpu.model)}
+              onClick={() => void onDelete(cpu.id, cpu.manufacturer, cpu.model)}
+              disabled={requestLoading}
             >
               Delete
             </button>
