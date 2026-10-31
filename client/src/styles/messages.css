@@ -1,6 +1,6 @@
 .dialog-container {
   max-width: 400px;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.75);
   color: white;
   border: 2px solid gray;
   border-radius: 1rem;
