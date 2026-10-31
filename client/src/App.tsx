@@ -14,6 +14,7 @@ import SearchBar from "./components/SearchBar";
 import ShowAllButton from "./components/ShowAllButton";
 import LoadingMessage from "./components/DialogMessages/LoadingMessage";
 import NotificationMessage from "./components/DialogMessages/NotificationMessage";
+import ConfirmMessage from "./components/DialogMessages/ConfirmMessage";
 
 // Services
 import cpuService from "./services/cpus";
@@ -130,28 +131,30 @@ export default function App() {
   }
 
   // Remove a CPU from the list
-  async function deleteCpu(cpuToRemove: CpuType) {
+  async function deleteCpu() {
+    const cpuToRemove = dataState.cpuSelected;
+
     try {
-      uiDispatch({ type: "SET_DIALOG_MESSAGE", payload: "Removing CPU from the database, please wait..." });
-      uiDispatch({ type: "TOGGLE_LOADING_MESSAGE", payload: true });
+      if (cpuToRemove) {
+        uiDispatch({ type: "SET_DIALOG_MESSAGE", payload: "Removing CPU from the database, please wait..." });
+        uiDispatch({ type: "TOGGLE_LOADING_MESSAGE", payload: true });
 
-      await cpuService.remove(cpuToRemove.id);
+        await cpuService.remove(cpuToRemove.id);
 
-      // Remove the CPU from the current list
-      dataDispatch({
-        type: "FETCH_SUCCESS",
-        payload: dataState.cpus.filter((c: CpuType) => c.id !== cpuToRemove.id),
-      });
+        // Remove the CPU from the current list
+        dataDispatch({
+          type: "FETCH_SUCCESS",
+          payload: dataState.cpus.filter((c: CpuType) => c.id !== cpuToRemove.id),
+        });
 
-      uiDispatch({ type: "TOGGLE_LOADING_MESSAGE", payload: false });
-      uiDispatch({ type: "SET_DIALOG_MESSAGE", payload: `${cpuToRemove.manufacturer} ${cpuToRemove.model} was removed` });
-      uiDispatch({ type: "TOGGLE_NOTIFICATION_MESSAGE", payload: true });
-      return true;
+        uiDispatch({ type: "TOGGLE_LOADING_MESSAGE", payload: false });
+        uiDispatch({ type: "SET_DIALOG_MESSAGE", payload: `${cpuToRemove.manufacturer} ${cpuToRemove.model} was removed` });
+        uiDispatch({ type: "TOGGLE_NOTIFICATION_MESSAGE", payload: true });
+      }
     } catch (_exception) {
       uiDispatch({ type: "TOGGLE_LOADING_MESSAGE", payload: false });
-      uiDispatch({ type: "SET_DIALOG_MESSAGE", payload: `Failed to remove ${cpuToRemove.manufacturer} ${cpuToRemove.model}` });
+      uiDispatch({ type: "SET_DIALOG_MESSAGE", payload: `Failed to remove ${cpuToRemove?.manufacturer} ${cpuToRemove?.model}` });
       uiDispatch({ type: "TOGGLE_NOTIFICATION_MESSAGE", payload: true });
-      return false;
     }
   }
 
@@ -222,6 +225,7 @@ export default function App() {
       {/* Dialog messages */}
       <LoadingMessage />
       <NotificationMessage />
+      <ConfirmMessage />
     </CpuContext.Provider>
   );
 }

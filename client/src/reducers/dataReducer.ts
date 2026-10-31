@@ -5,6 +5,7 @@ export const initialDataState: DataState = {
   cpusFound: [],
   loading: false,
   error: null,
+  cpuSelected: null,
 };
 
 const dataReducer = (state: DataState, action: DataActions): DataState => {
@@ -37,6 +38,11 @@ const dataReducer = (state: DataState, action: DataActions): DataState => {
         ...state,
         cpus: [...state.cpus, action.payload],
       };
+    case "SELECT_CPU":
+      return {
+        ...state,
+        cpuSelected: action.payload,
+      }
     default:
       return assertNever(action);
   }

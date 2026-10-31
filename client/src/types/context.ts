@@ -29,6 +29,7 @@ export type DataState = {
   cpusFound: CpuType[];
   loading: boolean;
   error: string | null;
+  cpuSelected: CpuType | null;
 };
 
 export type DataActions =
@@ -37,11 +38,12 @@ export type DataActions =
   | { type: "FETCH_FAILURE"; payload: string }
   | { type: "SET_FOUND"; payload: CpuType[] }
   | { type: "ADD_CPU"; payload: CpuType }
+  | { type: "SELECT_CPU"; payload: CpuType };
 
 export type CpuContextType = {
   addCpu: (cpu: NewCpu) => Promise<boolean>;
   updateCpu: (cpu: CpuType) => Promise<boolean>;
-  deleteCpu: (cpu: CpuType) => Promise<boolean>;
+  deleteCpu: () => Promise<void>;
   dataState: DataState;
   dataDispatch: React.Dispatch<DataActions>;
   uiState: UiState;

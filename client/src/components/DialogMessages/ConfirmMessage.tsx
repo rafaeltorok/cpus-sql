@@ -1,15 +1,9 @@
 import { useEffect, useRef } from "react";
 import useCpuContext from "../../hooks/useCpuContext";
 
-interface ConfirmMessageProps {
-  handleDelete: () => void;
-}
-
-export default function ConfirmMessage({
-  handleDelete,
-}: ConfirmMessageProps) {
+export default function ConfirmMessage() {
   const ref = useRef<HTMLDialogElement>(null);
-  const { uiState, uiDispatch } = useCpuContext();
+  const { uiState, uiDispatch, deleteCpu } = useCpuContext();
 
   useEffect(() => {
     if (uiState.confirmationMessage) {
@@ -23,7 +17,7 @@ export default function ConfirmMessage({
     <dialog
       className="dialog-container"
       ref={ref}
-      onCancel={(e) => e.preventDefault()} // stop Esc from closing it mid-load
+      onCancel={() => uiDispatch({ type: "TOGGLE_CONFIRMATION_MESSAGE", payload: false })}
     >
       <p className="dialog-message">{uiState.dialogMessage}</p>
       <div className="dialog-buttons-wrapper">
@@ -31,7 +25,7 @@ export default function ConfirmMessage({
           className="dialog-button"
           onClick={() => {
             uiDispatch({ type: "TOGGLE_CONFIRMATION_MESSAGE", payload: false });
-            handleDelete();
+            void deleteCpu();
           }}
         >
           Confirm

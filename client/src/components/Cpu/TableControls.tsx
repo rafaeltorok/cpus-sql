@@ -19,7 +19,7 @@ export default function TableControls({
   setCpuData,
   handleUpdate,
 }: TableControlsProps) {
-  const { uiState, uiDispatch } = useCpuContext();
+  const { uiState, uiDispatch, dataDispatch } = useCpuContext();
 
   return (
     <tfoot>
@@ -61,7 +61,11 @@ export default function TableControls({
           <td>
             <button
               id="delete-cpu-button"
-              onClick={() => uiDispatch({ type: "TOGGLE_CONFIRMATION_MESSAGE", payload: true })}
+              onClick={() => {
+                dataDispatch({ type: "SELECT_CPU", payload: cpu });
+                uiDispatch({ type: "SET_DIALOG_MESSAGE", payload: `Remove ${cpu.manufacturer} ${cpu.model} from the list?` });
+                uiDispatch({ type: "TOGGLE_CONFIRMATION_MESSAGE", payload: true });
+              }}
               disabled={uiState.loadingMessage}
             >
               Delete
