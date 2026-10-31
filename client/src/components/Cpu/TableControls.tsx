@@ -63,8 +63,14 @@ export default function TableControls({
               id="delete-cpu-button"
               onClick={() => {
                 dataDispatch({ type: "SELECT_CPU", payload: cpu });
-                uiDispatch({ type: "SET_DIALOG_MESSAGE", payload: `Remove ${cpu.manufacturer} ${cpu.model} from the list?` });
-                uiDispatch({ type: "TOGGLE_CONFIRMATION_MESSAGE", payload: true });
+                uiDispatch({
+                  type: "SET_DIALOG_MESSAGE",
+                  payload: `Remove ${cpu.manufacturer} ${cpu.model} from the list?`,
+                });
+                uiDispatch({
+                  type: "TOGGLE_CONFIRMATION_MESSAGE",
+                  payload: true,
+                });
               }}
               disabled={uiState.loadingMessage}
             >

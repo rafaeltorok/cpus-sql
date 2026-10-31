@@ -19,10 +19,10 @@ export type UiActions =
   | { type: "TOGGLE_SHOW_ALL" }
   | { type: "TOGGLE_ADD_FORM" }
   | { type: "TOGGLE_INDEX" }
-  | { type: "TOGGLE_LOADING_MESSAGE", payload: boolean }
-  | { type: "TOGGLE_NOTIFICATION_MESSAGE", payload: boolean }
-  | { type: "TOGGLE_CONFIRMATION_MESSAGE", payload: boolean }
-  | { type: "SET_DIALOG_MESSAGE", payload: string };
+  | { type: "TOGGLE_LOADING_MESSAGE"; payload: boolean }
+  | { type: "TOGGLE_NOTIFICATION_MESSAGE"; payload: boolean }
+  | { type: "TOGGLE_CONFIRMATION_MESSAGE"; payload: boolean }
+  | { type: "SET_DIALOG_MESSAGE"; payload: string };
 
 export type DataState = {
   cpus: CpuType[];

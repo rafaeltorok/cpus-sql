@@ -31,8 +31,8 @@ export default function SearchBar() {
         return `${cpu.manufacturer} ${cpu.model}`
           .toLowerCase()
           .includes(searchTerm.toLowerCase());
-      })
-    })
+      }),
+    });
   }
 
   return (

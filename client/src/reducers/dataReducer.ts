@@ -42,7 +42,7 @@ const dataReducer = (state: DataState, action: DataActions): DataState => {
       return {
         ...state,
         cpuSelected: action.payload,
-      }
+      };
     default:
       return assertNever(action);
   }

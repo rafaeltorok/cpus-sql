@@ -19,12 +19,17 @@ export default function NotificationMessage() {
     <dialog
       className="dialog-container"
       ref={ref}
-      onCancel={() => uiDispatch({ type: "TOGGLE_NOTIFICATION_MESSAGE", payload: false })}
+      onCancel={() =>
+        uiDispatch({ type: "TOGGLE_NOTIFICATION_MESSAGE", payload: false })
+      }
     >
       <p className="dialog-message">{uiState.dialogMessage}</p>
-      <button className="dialog-button" onClick={() => {
-        uiDispatch({ type: "TOGGLE_NOTIFICATION_MESSAGE", payload: false });
-      }}>
+      <button
+        className="dialog-button"
+        onClick={() => {
+          uiDispatch({ type: "TOGGLE_NOTIFICATION_MESSAGE", payload: false });
+        }}
+      >
         Close
       </button>
     </dialog>

@@ -3,7 +3,7 @@ import { useEffect, useReducer } from "react";
 
 // React context
 import CpuContext from "./context/cpuContext";
-import dataReducer, { initialDataState} from "./reducers/dataReducer";
+import dataReducer, { initialDataState } from "./reducers/dataReducer";
 import uiReducer, { initialUiState } from "./reducers/uiReducer";
 
 // Components
@@ -39,14 +39,17 @@ export default function App() {
     const fetchData = async () => {
       try {
         uiDispatch({ type: "TOGGLE_LOADING_MESSAGE", payload: true });
-        uiDispatch({ type: "SET_DIALOG_MESSAGE", payload: "Loading CPUs data, please wait..." });
-        
+        uiDispatch({
+          type: "SET_DIALOG_MESSAGE",
+          payload: "Loading CPUs data, please wait...",
+        });
+
         dataDispatch({ type: "FETCH_START" });
         const response = await fetch(baseUrl);
         const data: CpuType[] = (await response.json()) as CpuType[];
         dataDispatch({ type: "FETCH_SUCCESS", payload: data });
       } catch (err: unknown) {
-         if (err instanceof Error) {
+        if (err instanceof Error) {
           dataDispatch({ type: "FETCH_FAILURE", payload: err.message });
         } else {
           dataDispatch({ type: "FETCH_FAILURE", payload: String(err) });
@@ -61,7 +64,10 @@ export default function App() {
   // Add a new CPU using the data from the add form
   async function addCpu(cpuObject: NewCpu): Promise<boolean> {
     try {
-      uiDispatch({ type: "SET_DIALOG_MESSAGE", payload: "Submitting data, please wait..." });
+      uiDispatch({
+        type: "SET_DIALOG_MESSAGE",
+        payload: "Submitting data, please wait...",
+      });
       uiDispatch({ type: "TOGGLE_LOADING_MESSAGE", payload: true });
 
       // Check if the data is valid before sending it to the server
@@ -92,13 +98,19 @@ export default function App() {
       });
 
       // Show a confirmation message on success
-      uiDispatch({ type: "SET_DIALOG_MESSAGE", payload: `${returnedObject.manufacturer} ${returnedObject.model} was added!` });
+      uiDispatch({
+        type: "SET_DIALOG_MESSAGE",
+        payload: `${returnedObject.manufacturer} ${returnedObject.model} was added!`,
+      });
       uiDispatch({ type: "TOGGLE_LOADING_MESSAGE", payload: false });
       uiDispatch({ type: "TOGGLE_NOTIFICATION_MESSAGE", payload: true });
 
       return true;
     } catch (_err: unknown) {
-      uiDispatch({ type: "SET_DIALOG_MESSAGE", payload: "Failed to add new CPU" });
+      uiDispatch({
+        type: "SET_DIALOG_MESSAGE",
+        payload: "Failed to add new CPU",
+      });
       uiDispatch({ type: "TOGGLE_LOADING_MESSAGE", payload: false });
       uiDispatch({ type: "TOGGLE_NOTIFICATION_MESSAGE", payload: true });
       return false;
@@ -108,7 +120,10 @@ export default function App() {
   // Update a CPU specifications
   async function updateCpu(newSpecs: CpuType): Promise<boolean> {
     try {
-      uiDispatch({ type: "SET_DIALOG_MESSAGE", payload: "Updating specs, please wait..." });
+      uiDispatch({
+        type: "SET_DIALOG_MESSAGE",
+        payload: "Updating specs, please wait...",
+      });
       uiDispatch({ type: "TOGGLE_LOADING_MESSAGE", payload: true });
 
       // Send an API request to update the specs
@@ -117,14 +132,19 @@ export default function App() {
       // Update the current CPU list with the updated returned object
       dataDispatch({
         type: "FETCH_SUCCESS",
-        payload: dataState.cpus.map((c: CpuType) => c.id === updatedData.id ? updatedData : c),
+        payload: dataState.cpus.map((c: CpuType) =>
+          c.id === updatedData.id ? updatedData : c,
+        ),
       });
 
       uiDispatch({ type: "TOGGLE_LOADING_MESSAGE", payload: false });
       return true;
     } catch (_exception) {
       uiDispatch({ type: "TOGGLE_LOADING_MESSAGE", payload: false });
-      uiDispatch({ type: "SET_DIALOG_MESSAGE", payload: "Failed to update the CPU specs" });
+      uiDispatch({
+        type: "SET_DIALOG_MESSAGE",
+        payload: "Failed to update the CPU specs",
+      });
       uiDispatch({ type: "TOGGLE_NOTIFICATION_MESSAGE", payload: true });
       return false;
     }
@@ -136,7 +156,10 @@ export default function App() {
 
     try {
       if (cpuToRemove) {
-        uiDispatch({ type: "SET_DIALOG_MESSAGE", payload: "Removing CPU from the database, please wait..." });
+        uiDispatch({
+          type: "SET_DIALOG_MESSAGE",
+          payload: "Removing CPU from the database, please wait...",
+        });
         uiDispatch({ type: "TOGGLE_LOADING_MESSAGE", payload: true });
 
         await cpuService.remove(cpuToRemove.id);
@@ -144,16 +167,24 @@ export default function App() {
         // Remove the CPU from the current list
         dataDispatch({
           type: "FETCH_SUCCESS",
-          payload: dataState.cpus.filter((c: CpuType) => c.id !== cpuToRemove.id),
+          payload: dataState.cpus.filter(
+            (c: CpuType) => c.id !== cpuToRemove.id,
+          ),
         });
 
         uiDispatch({ type: "TOGGLE_LOADING_MESSAGE", payload: false });
-        uiDispatch({ type: "SET_DIALOG_MESSAGE", payload: `${cpuToRemove.manufacturer} ${cpuToRemove.model} was removed` });
+        uiDispatch({
+          type: "SET_DIALOG_MESSAGE",
+          payload: `${cpuToRemove.manufacturer} ${cpuToRemove.model} was removed`,
+        });
         uiDispatch({ type: "TOGGLE_NOTIFICATION_MESSAGE", payload: true });
       }
     } catch (_exception) {
       uiDispatch({ type: "TOGGLE_LOADING_MESSAGE", payload: false });
-      uiDispatch({ type: "SET_DIALOG_MESSAGE", payload: `Failed to remove ${cpuToRemove?.manufacturer} ${cpuToRemove?.model}` });
+      uiDispatch({
+        type: "SET_DIALOG_MESSAGE",
+        payload: `Failed to remove ${cpuToRemove?.manufacturer} ${cpuToRemove?.model}`,
+      });
       uiDispatch({ type: "TOGGLE_NOTIFICATION_MESSAGE", payload: true });
     } finally {
       dataDispatch({ type: "SELECT_CPU", payload: null });
@@ -218,9 +249,7 @@ export default function App() {
       {/* CPUs section */}
       <main>
         <section>
-          <CpuList
-            scrollToIndex={scrollToIndex}
-          />
+          <CpuList scrollToIndex={scrollToIndex} />
         </section>
       </main>
 

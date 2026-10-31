@@ -49,7 +49,7 @@ const uiReducer = (state: UiState, action: UiActions): UiState => {
         ...state,
         notificationMessage: action.payload,
       };
-    case  "TOGGLE_CONFIRMATION_MESSAGE":
+    case "TOGGLE_CONFIRMATION_MESSAGE":
       return {
         ...state,
         confirmationMessage: action.payload,

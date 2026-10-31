@@ -17,7 +17,9 @@ export default function ConfirmMessage() {
     <dialog
       className="dialog-container"
       ref={ref}
-      onCancel={() => uiDispatch({ type: "TOGGLE_CONFIRMATION_MESSAGE", payload: false })}
+      onCancel={() =>
+        uiDispatch({ type: "TOGGLE_CONFIRMATION_MESSAGE", payload: false })
+      }
     >
       <p className="dialog-message">{uiState.dialogMessage}</p>
       <div className="dialog-buttons-wrapper">
@@ -30,10 +32,13 @@ export default function ConfirmMessage() {
         >
           Confirm
         </button>
-        <button className="dialog-button" onClick={() => {
-          uiDispatch({ type: "TOGGLE_CONFIRMATION_MESSAGE", payload: false });
-          dataDispatch({ type: "SELECT_CPU", payload: null });
-        }}>
+        <button
+          className="dialog-button"
+          onClick={() => {
+            uiDispatch({ type: "TOGGLE_CONFIRMATION_MESSAGE", payload: false });
+            dataDispatch({ type: "SELECT_CPU", payload: null });
+          }}
+        >
           Cancel
         </button>
       </div>

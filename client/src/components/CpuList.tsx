@@ -10,9 +10,7 @@ interface CpuListProps {
   scrollToIndex: (cpuTableId: string) => void;
 }
 
-export default function CpuList({
-  scrollToIndex,
-}: CpuListProps) {
+export default function CpuList({ scrollToIndex }: CpuListProps) {
   const { uiState, dataState } = useCpuContext();
 
   if (dataState.loading) return <h2>Loading CPUs, please wait...</h2>;
@@ -29,9 +27,7 @@ export default function CpuList({
       ) : (
         cpusData.map((cpu: CpuType) => (
           <div key={cpu.id}>
-            <Cpu
-              cpu={cpu}
-            />
+            <Cpu cpu={cpu} />
             <button
               className="back-to-index-button"
               onClick={() =>

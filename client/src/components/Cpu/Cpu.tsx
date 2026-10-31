@@ -16,9 +16,7 @@ interface CpuProps {
 }
 
 // Component
-export default function Cpu({
-  cpu,
-}: CpuProps) {
+export default function Cpu({ cpu }: CpuProps) {
   const { uiState, updateCpu } = useCpuContext();
 
   const [showBody, setShowBody] = useState(false);
