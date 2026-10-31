@@ -19,7 +19,7 @@ export default function NotificationMessage() {
     <dialog
       className="dialog-container"
       ref={ref}
-      onCancel={(e) => e.preventDefault()} // stop Esc from closing it mid-load
+      onCancel={() => uiDispatch({ type: "TOGGLE_NOTIFICATION_MESSAGE", payload: false })}
     >
       <p className="dialog-message">{uiState.dialogMessage}</p>
       <button className="dialog-button" onClick={() => {
