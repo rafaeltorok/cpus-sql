@@ -10,16 +10,10 @@ import "../../styles/addCpuForm.css";
 // TypeScript types
 import type { InputData } from "../../types/types";
 
-interface AddCpuFormProps {
-  requestLoading: boolean;
-}
-
 type Event = React.ChangeEvent<HTMLInputElement>;
 
 // Component
-export default function AddCpuForm({
-  requestLoading,
-}: AddCpuFormProps) {
+export default function AddCpuForm() {
   const [cpuSpecs, setCpuSpecs] = useState<InputData>({
     manufacturer: "",
     model: "",
@@ -56,7 +50,7 @@ export default function AddCpuForm({
     });
 
     // If the CPU was successfully added, close the form and clear the input data
-    if (!requestLoading && confirm) {
+    if (!uiState.loadingMessage && confirm) {
       setCpuSpecs({
         manufacturer: "",
         model: "",
@@ -219,7 +213,7 @@ export default function AddCpuForm({
                 <button
                   className="add-cpu-submit-button"
                   type="submit"
-                  disabled={requestLoading}
+                  disabled={uiState.loadingMessage}
                 >
                   Submit
                 </button>

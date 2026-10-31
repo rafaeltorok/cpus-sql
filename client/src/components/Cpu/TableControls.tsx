@@ -1,3 +1,5 @@
+import useCpuContext from "../../hooks/useCpuContext";
+
 import "../../styles/tableControls.css";
 
 import type { CpuType } from "../../types/types";
@@ -8,8 +10,6 @@ interface TableControlsProps {
   cpu: CpuType;
   setCpuData: (data: CpuType) => void;
   handleUpdate: () => Promise<void>;
-  requestLoading: boolean;
-  setShowConfirmDialog: (show: boolean) => void;
 }
 
 export default function TableControls({
@@ -18,9 +18,9 @@ export default function TableControls({
   cpu,
   setCpuData,
   handleUpdate,
-  requestLoading,
-  setShowConfirmDialog,
 }: TableControlsProps) {
+  const { uiState, uiDispatch } = useCpuContext();
+
   return (
     <tfoot>
       {editMode ? (
@@ -29,7 +29,7 @@ export default function TableControls({
             <button
               id="confirm-edit-button"
               onClick={() => void handleUpdate()}
-              disabled={requestLoading}
+              disabled={uiState.loadingMessage}
             >
               Confirm
             </button>
@@ -41,7 +41,7 @@ export default function TableControls({
                 setEditMode(false);
                 setCpuData(cpu);
               }}
-              disabled={requestLoading}
+              disabled={uiState.loadingMessage}
             >
               Cancel
             </button>
@@ -53,7 +53,7 @@ export default function TableControls({
             <button
               id="edit-mode-button"
               onClick={() => setEditMode(true)}
-              disabled={requestLoading}
+              disabled={uiState.loadingMessage}
             >
               Edit
             </button>
@@ -61,8 +61,8 @@ export default function TableControls({
           <td>
             <button
               id="delete-cpu-button"
-              onClick={() => setShowConfirmDialog(true)}
-              disabled={requestLoading}
+              onClick={() => uiDispatch({ type: "TOGGLE_CONFIRMATION_MESSAGE", payload: true })}
+              disabled={uiState.loadingMessage}
             >
               Delete
             </button>

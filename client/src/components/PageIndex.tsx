@@ -21,6 +21,7 @@ export default function PageIndex() {
     }
   };
 
+  // Filter the list based on the search term, if available
   const cpusData = uiState.searchCpu ? dataState.cpusFound : dataState.cpus;
 
   return (

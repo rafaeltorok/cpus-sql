@@ -1,5 +1,5 @@
 // React
-import { useState, useEffect, useReducer } from "react";
+import { useEffect, useReducer } from "react";
 
 // React context
 import CpuContext from "./context/cpuContext";
@@ -33,22 +33,12 @@ export default function App() {
   const [dataState, dataDispatch] = useReducer(dataReducer, initialDataState);
   const [uiState, uiDispatch] = useReducer(uiReducer, initialUiState);
 
-  // Displays a popup dialog loading message when sending API requests
-  const [requestLoading, setRequestLoading] = useState<boolean>(false);
-
-  // Handles displaying a notification message with a close button
-  const [showNotification, setShowNotification] = useState<boolean>(false);
-  const [message, setMessage] = useState<string>("");
-
-  // Displays a dialog message to confirm a CPU removal
-  const [showConfirmDialog, setShowConfirmDialog] = useState<boolean>(false);
-
   // Fetch the initial CPUs data
   useEffect(() => {
     const fetchData = async () => {
       try {
-        setRequestLoading(true);
-        setMessage("Loading CPUs data, please wait...");
+        uiDispatch({ type: "TOGGLE_LOADING_MESSAGE", payload: true });
+        uiDispatch({ type: "SET_DIALOG_MESSAGE", payload: "Loading CPUs data, please wait..." });
         
         dataDispatch({ type: "FETCH_START" });
         const response = await fetch(baseUrl);
@@ -61,7 +51,7 @@ export default function App() {
           dataDispatch({ type: "FETCH_FAILURE", payload: String(err) });
         }
       } finally {
-        setRequestLoading(false);
+        uiDispatch({ type: "TOGGLE_LOADING_MESSAGE", payload: false });
       }
     };
     void fetchData();
@@ -70,8 +60,8 @@ export default function App() {
   // Add a new CPU using the data from the add form
   async function addCpu(cpuObject: NewCpu): Promise<boolean> {
     try {
-      setMessage("Submitting data, please wait...");
-      setRequestLoading(true);
+      uiDispatch({ type: "SET_DIALOG_MESSAGE", payload: "Submitting data, please wait..." });
+      uiDispatch({ type: "TOGGLE_LOADING_MESSAGE", payload: true });
 
       // Check if the data is valid before sending it to the server
       if (
@@ -85,9 +75,9 @@ export default function App() {
         cpuObject.architecture === "" ||
         cpuObject.mbsocket === ""
       ) {
-        setMessage("Invalid CPU data");
-        setRequestLoading(false);
-        setShowNotification(true);
+        uiDispatch({ type: "SET_DIALOG_MESSAGE", payload: "Invalid CPU data" });
+        uiDispatch({ type: "TOGGLE_LOADING_MESSAGE", payload: false });
+        uiDispatch({ type: "TOGGLE_NOTIFICATION_MESSAGE", payload: true });
         return false;
       }
 
@@ -101,17 +91,15 @@ export default function App() {
       });
 
       // Show a confirmation message on success
-      setMessage(
-        `${returnedObject.manufacturer} ${returnedObject.model} was added!`,
-      );
-      setRequestLoading(false);
-      setShowNotification(true);
+      uiDispatch({ type: "SET_DIALOG_MESSAGE", payload: `${returnedObject.manufacturer} ${returnedObject.model} was added!` });
+      uiDispatch({ type: "TOGGLE_LOADING_MESSAGE", payload: false });
+      uiDispatch({ type: "TOGGLE_NOTIFICATION_MESSAGE", payload: true });
 
       return true;
     } catch (_err: unknown) {
-      setMessage("Failed to add new CPU");
-      setRequestLoading(false);
-      setShowNotification(true);
+      uiDispatch({ type: "SET_DIALOG_MESSAGE", payload: "Failed to add new CPU" });
+      uiDispatch({ type: "TOGGLE_LOADING_MESSAGE", payload: false });
+      uiDispatch({ type: "TOGGLE_NOTIFICATION_MESSAGE", payload: true });
       return false;
     }
   }
@@ -119,8 +107,8 @@ export default function App() {
   // Update a CPU specifications
   async function updateCpu(newSpecs: CpuType): Promise<boolean> {
     try {
-      setMessage("Updating specs, please wait...");
-      setRequestLoading(true);
+      uiDispatch({ type: "SET_DIALOG_MESSAGE", payload: "Updating specs, please wait..." });
+      uiDispatch({ type: "TOGGLE_LOADING_MESSAGE", payload: true });
 
       // Send an API request to update the specs
       const updatedData = await cpuService.update(newSpecs.id, newSpecs);
@@ -131,12 +119,12 @@ export default function App() {
         payload: dataState.cpus.map((c: CpuType) => c.id === updatedData.id ? updatedData : c),
       });
 
-      setRequestLoading(false);
+      uiDispatch({ type: "TOGGLE_LOADING_MESSAGE", payload: false });
       return true;
     } catch (_exception) {
-      setRequestLoading(false);
-      setMessage("Failed to update the CPU specs");
-      setShowNotification(true);
+      uiDispatch({ type: "TOGGLE_LOADING_MESSAGE", payload: false });
+      uiDispatch({ type: "SET_DIALOG_MESSAGE", payload: "Failed to update the CPU specs" });
+      uiDispatch({ type: "TOGGLE_NOTIFICATION_MESSAGE", payload: true });
       return false;
     }
   }
@@ -144,8 +132,8 @@ export default function App() {
   // Remove a CPU from the list
   async function deleteCpu(cpuToRemove: CpuType) {
     try {
-      setMessage("Removing CPU from the database, please wait...");
-      setRequestLoading(true);
+      uiDispatch({ type: "SET_DIALOG_MESSAGE", payload: "Removing CPU from the database, please wait..." });
+      uiDispatch({ type: "TOGGLE_LOADING_MESSAGE", payload: true });
 
       await cpuService.remove(cpuToRemove.id);
 
@@ -155,18 +143,14 @@ export default function App() {
         payload: dataState.cpus.filter((c: CpuType) => c.id !== cpuToRemove.id),
       });
 
-      setRequestLoading(false);
-      setMessage(
-        `${cpuToRemove.manufacturer} ${cpuToRemove.model} was removed`,
-      );
-      setShowNotification(true);
+      uiDispatch({ type: "TOGGLE_LOADING_MESSAGE", payload: false });
+      uiDispatch({ type: "SET_DIALOG_MESSAGE", payload: `${cpuToRemove.manufacturer} ${cpuToRemove.model} was removed` });
+      uiDispatch({ type: "TOGGLE_NOTIFICATION_MESSAGE", payload: true });
       return true;
     } catch (_exception) {
-      setRequestLoading(false);
-      setMessage(
-        `Failed to remove ${cpuToRemove.manufacturer} ${cpuToRemove.model}`,
-      );
-      setShowNotification(true);
+      uiDispatch({ type: "TOGGLE_LOADING_MESSAGE", payload: false });
+      uiDispatch({ type: "SET_DIALOG_MESSAGE", payload: `Failed to remove ${cpuToRemove.manufacturer} ${cpuToRemove.model}` });
+      uiDispatch({ type: "TOGGLE_NOTIFICATION_MESSAGE", payload: true });
       return false;
     }
   }
@@ -217,9 +201,7 @@ export default function App() {
 
       {/* Main page controls section */}
       <nav>
-        <AddCpuForm
-          requestLoading={requestLoading}
-        />
+        <AddCpuForm />
 
         <SearchBar />
 
@@ -233,20 +215,13 @@ export default function App() {
         <section>
           <CpuList
             scrollToIndex={scrollToIndex}
-            requestLoading={requestLoading}
-            showConfirmDialog={showConfirmDialog}
-            setShowConfirmDialog={setShowConfirmDialog}
           />
         </section>
       </main>
 
       {/* Dialog messages */}
-      <LoadingMessage showMessage={requestLoading} message={message} />
-      <NotificationMessage
-        showMessage={showNotification}
-        setShowMessage={setShowNotification}
-        message={message}
-      />
+      <LoadingMessage />
+      <NotificationMessage />
     </CpuContext.Provider>
   );
 }

@@ -1,25 +1,19 @@
 import { useEffect, useRef } from "react";
+import useCpuContext from "../../hooks/useCpuContext";
 
 import "../../styles/messages.css";
 
-interface LoadingMessageProps {
-  showMessage: boolean;
-  message: string;
-}
-
-export default function LoadingMessage({
-  showMessage,
-  message,
-}: LoadingMessageProps) {
+export default function LoadingMessage() {
   const ref = useRef<HTMLDialogElement>(null);
+  const { uiState } = useCpuContext();
 
   useEffect(() => {
-    if (showMessage) {
+    if (uiState.loadingMessage) {
       ref.current?.showModal();
     } else {
       ref.current?.close();
     }
-  }, [showMessage]);
+  }, [uiState.loadingMessage]);
 
   return (
     <dialog
@@ -27,7 +21,7 @@ export default function LoadingMessage({
       ref={ref}
       onCancel={(e) => e.preventDefault()} // stop Esc from closing it mid-load
     >
-      <p className="dialog-message">{message}</p>
+      <p className="dialog-message">{uiState.dialogMessage}</p>
     </dialog>
   );
 }

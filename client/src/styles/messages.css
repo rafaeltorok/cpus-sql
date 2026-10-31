@@ -6,8 +6,7 @@
   border-radius: 1rem;
   margin-inline: auto;
   top: 50%;
-  transform: translateY(-100%);
-  background-color: black;
+  transform: translateY(-50%);
 }
 
 .dialog-container::backdrop {

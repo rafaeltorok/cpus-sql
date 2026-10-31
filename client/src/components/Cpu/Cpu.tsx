@@ -14,19 +14,13 @@ import type { CpuType } from "../../types/types";
 
 interface CpuProps {
   cpu: CpuType;
-  requestLoading: boolean;
-  showConfirmDialog: boolean;
-  setShowConfirmDialog: (show: boolean) => void;
 }
 
 // Component
 export default function Cpu({
   cpu,
-  requestLoading,
-  showConfirmDialog,
-  setShowConfirmDialog,
 }: CpuProps) {
-  const { uiState, updateCpu, deleteCpu } = useCpuContext();
+  const { uiState, uiDispatch, updateCpu, deleteCpu } = useCpuContext();
 
   const [showBody, setShowBody] = useState(false);
   const [editMode, setEditMode] = useState(false);
@@ -45,13 +39,14 @@ export default function Cpu({
     const confirm = await updateCpu(cpuData);
 
     // Only leave the edit mode if the update succeeds
-    if (!requestLoading && confirm) {
+    if (!uiState.loadingMessage && confirm) {
       setEditMode(false);
     }
   }
 
   // Handles calling the delete function to remove the current CPU
   function handleDelete(): void {
+    uiDispatch({ type: "SET_DIALOG_MESSAGE", payload: `Remove ${cpu.manufacturer} ${cpu.model} from the list?` });
     void deleteCpu(cpu);
   }
 
@@ -180,16 +175,11 @@ export default function Cpu({
               cpu={cpu}
               setCpuData={setCpuData}
               handleUpdate={handleUpdate}
-              requestLoading={requestLoading}
-              setShowConfirmDialog={setShowConfirmDialog}
             />
           </>
         )}
       </table>
       <ConfirmMessage
-        showMessage={showConfirmDialog}
-        setShowMessage={setShowConfirmDialog}
-        message={`Remove ${cpu.manufacturer} ${cpu.model} from the list?`}
         handleDelete={handleDelete}
       />
     </>
