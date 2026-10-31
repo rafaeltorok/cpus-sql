@@ -6,7 +6,7 @@
   border-radius: 1rem;
   margin-inline: auto;
   top: 50%;
-  transform: translateY(-50%);
+  transform: translateY(-75%);
 }
 
 .dialog-container::backdrop {
