@@ -30,7 +30,6 @@ export default function CpuList({
         cpusData.map((cpu: CpuType) => (
           <div key={cpu.id}>
             <Cpu
-              key={cpu.id}
               cpu={cpu}
             />
             <button
