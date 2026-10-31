@@ -106,7 +106,7 @@ describe("the Add Processor form", function () {
 
       // Confirm there is a warning about the invalid data
       cy.get('[open=""] > .dialog-message').contains(/invalid cpu data/i);
-      cy.get('.dialog-button').click();  // Close the notification
+      cy.get('[open=""] > .dialog-button').click();  // Close the notification
       
       // Confirm the processor was not added
       cy.get(processors[0].model).should("not.exist");
@@ -126,7 +126,7 @@ describe("the Add Processor form", function () {
 
       // Confirm there is a warning about the invalid data
       cy.get('[open=""] > .dialog-message').contains(/invalid cpu data/i);
-      cy.get('.dialog-button').click();  // Close the notification
+      cy.get('[open=""] > .dialog-button').click();  // Close the notification
       
       // Confirm the processor was not added
       cy.get(processors[0].model).should("not.exist");
@@ -145,7 +145,7 @@ describe("the Add Processor form", function () {
 
       // Confirm there is a warning about the invalid data
       cy.get('[open=""] > .dialog-message').contains(/invalid cpu data/i);
-      cy.get('.dialog-button').click();  // Close the notification
+      cy.get('[open=""] > .dialog-button').click();  // Close the notification
       
       // Confirm the processor was not added
       cy.get(processors[0].model).should("not.exist");
@@ -164,7 +164,7 @@ describe("the Add Processor form", function () {
 
       // Confirm there is a warning about the invalid data
       cy.get('[open=""] > .dialog-message').contains(/invalid cpu data/i);
-      cy.get('.dialog-button').click();  // Close the notification
+      cy.get('[open=""] > .dialog-button').click();  // Close the notification
       
       // Confirm the processor was not added
       cy.get(processors[0].model).should("not.exist");
@@ -184,7 +184,7 @@ describe("the Add Processor form", function () {
 
       // Confirm there is a warning about the invalid data
       cy.get('[open=""] > .dialog-message').contains(/invalid cpu data/i);
-      cy.get('.dialog-button').click();  // Close the notification
+      cy.get('[open=""] > .dialog-button').click();  // Close the notification
       
       // Confirm the processor was not added
       cy.get(processors[0].model).should("not.exist");

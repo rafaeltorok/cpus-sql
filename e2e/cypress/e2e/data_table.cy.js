@@ -60,7 +60,7 @@ describe("testing the CPU data table", function () {
       cy.get('[open=""] > .dialog-message').contains(
         `${processor.manufacturer} ${processor.model} was removed`
       );
-      cy.get('.dialog-button').click();  // Close the notification
+      cy.get('[open=""] > .dialog-button').click();  // Close the notification
 
     // Confirm the data table has been removed from the list
     cy.get(`${processor.manufacturer} ${processor.model}`).should("not.exist");
