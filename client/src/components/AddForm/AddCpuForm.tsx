@@ -1,5 +1,5 @@
-// React
 import { useState } from "react";
+import useCpuContext from "../../hooks/useCpuContext";
 
 // Components
 import FormRow from "./FormRow";
@@ -8,24 +8,12 @@ import FormRow from "./FormRow";
 import "../../styles/addCpuForm.css";
 
 // TypeScript types
-import type { InputData, NewCpu } from "../../types/types";
-
-interface AddCpuFormProps {
-  addCpu: (cpu: NewCpu) => Promise<boolean>;
-  showAddForm: boolean;
-  setShowAddForm: React.Dispatch<React.SetStateAction<boolean>>;
-  requestLoading: boolean;
-}
+import type { InputData } from "../../types/types";
 
 type Event = React.ChangeEvent<HTMLInputElement>;
 
 // Component
-export default function AddCpuForm({
-  addCpu,
-  showAddForm,
-  setShowAddForm,
-  requestLoading,
-}: AddCpuFormProps) {
+export default function AddCpuForm() {
   const [cpuSpecs, setCpuSpecs] = useState<InputData>({
     manufacturer: "",
     model: "",
@@ -38,6 +26,8 @@ export default function AddCpuForm({
     mbsocket: "",
     tdp: "0",
   });
+
+  const { addCpu, uiState, uiDispatch } = useCpuContext();
 
   // Handle the add form submit
   const handleSubmit = async (
@@ -60,7 +50,7 @@ export default function AddCpuForm({
     });
 
     // If the CPU was successfully added, close the form and clear the input data
-    if (!requestLoading && confirm) {
+    if (!uiState.loadingMessage && confirm) {
       setCpuSpecs({
         manufacturer: "",
         model: "",
@@ -74,7 +64,9 @@ export default function AddCpuForm({
         tdp: "0",
       });
 
-      setShowAddForm(false);
+      uiDispatch({
+        type: "TOGGLE_ADD_FORM",
+      });
     }
   };
 
@@ -90,12 +82,12 @@ export default function AddCpuForm({
           <button
             id="add-cpu-button"
             type="button"
-            onClick={() => setShowAddForm((prev) => !prev)}
+            onClick={() => uiDispatch({ type: "TOGGLE_ADD_FORM" })}
           >
-            {showAddForm ? "Cancel" : "Add Processor"}
+            {uiState.showAddForm ? "Cancel" : "Add Processor"}
           </button>
 
-          {showAddForm && (
+          {uiState.showAddForm && (
             <fieldset className="add-cpu-field">
               <FormRow
                 id="manufacturer"
@@ -221,7 +213,7 @@ export default function AddCpuForm({
                 <button
                   className="add-cpu-submit-button"
                   type="submit"
-                  disabled={requestLoading}
+                  disabled={uiState.loadingMessage}
                 >
                   Submit
                 </button>

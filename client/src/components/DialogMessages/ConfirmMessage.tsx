@@ -1,46 +1,44 @@
 import { useEffect, useRef } from "react";
+import useCpuContext from "../../hooks/useCpuContext";
 
-interface ConfirmMessageProps {
-  showMessage: boolean;
-  setShowMessage: (show: boolean) => void;
-  message: string;
-  handleDelete: () => void;
-}
-
-export default function ConfirmMessage({
-  showMessage,
-  setShowMessage,
-  message,
-  handleDelete,
-}: ConfirmMessageProps) {
+export default function ConfirmMessage() {
   const ref = useRef<HTMLDialogElement>(null);
+  const { uiState, uiDispatch, dataDispatch, deleteCpu } = useCpuContext();
 
   useEffect(() => {
-    if (showMessage) {
+    if (uiState.confirmationMessage) {
       ref.current?.showModal();
     } else {
       ref.current?.close();
     }
-  }, [showMessage]);
+  }, [uiState.confirmationMessage]);
 
   return (
     <dialog
       className="dialog-container"
       ref={ref}
-      onCancel={(e) => e.preventDefault()} // stop Esc from closing it mid-load
+      onCancel={() =>
+        uiDispatch({ type: "TOGGLE_CONFIRMATION_MESSAGE", payload: false })
+      }
     >
-      <p className="dialog-message">{message}</p>
+      <p className="dialog-message">{uiState.dialogMessage}</p>
       <div className="dialog-buttons-wrapper">
         <button
           className="dialog-button"
           onClick={() => {
-            setShowMessage(false);
-            handleDelete();
+            uiDispatch({ type: "TOGGLE_CONFIRMATION_MESSAGE", payload: false });
+            void deleteCpu();
           }}
         >
           Confirm
         </button>
-        <button className="dialog-button" onClick={() => setShowMessage(false)}>
+        <button
+          className="dialog-button"
+          onClick={() => {
+            uiDispatch({ type: "TOGGLE_CONFIRMATION_MESSAGE", payload: false });
+            dataDispatch({ type: "SELECT_CPU", payload: null });
+          }}
+        >
           Cancel
         </button>
       </div>

@@ -1,13 +1,20 @@
 // React
-import { useState, useEffect } from "react";
+import { useEffect, useReducer } from "react";
+
+// React context
+import CpuContext from "./context/cpuContext";
+import dataReducer, { initialDataState } from "./reducers/dataReducer";
+import uiReducer, { initialUiState } from "./reducers/uiReducer";
 
 // Components
 import CpuList from "./components/CpuList";
 import AddCpuForm from "./components/AddForm/AddCpuForm";
 import PageIndex from "./components/PageIndex";
 import SearchBar from "./components/SearchBar";
+import ShowAllButton from "./components/ShowAllButton";
 import LoadingMessage from "./components/DialogMessages/LoadingMessage";
 import NotificationMessage from "./components/DialogMessages/NotificationMessage";
+import ConfirmMessage from "./components/DialogMessages/ConfirmMessage";
 
 // Services
 import cpuService from "./services/cpus";
@@ -23,51 +30,32 @@ export default function App() {
   // Set the API server URL
   const baseUrl = "/api/cpus";
 
-  // Handles the initial loading state for all CPUs data
-  const [cpus, setCpus] = useState<CpuType[]>([]);
-  const [error, setError] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(true);
-
-  // Controls the visibility for all tables
-  const [showAll, setShowAll] = useState<boolean>(false);
-
-  // Handles the search term within the search bar
-  const [searchTerm, setSearchTerm] = useState<string>("");
-
-  // Controls the add form visibility
-  const [showAddForm, setShowAddForm] = useState<boolean>(false);
-
-  // Displays a popup dialog loading message when sending API requests
-  const [requestLoading, setRequestLoading] = useState<boolean>(false);
-
-  // Handles displaying a notification message with a close button
-  const [showNotification, setShowNotification] = useState<boolean>(false);
-  const [message, setMessage] = useState<string>("");
-
-  // Displays a dialog message to confirm a CPU removal
-  const [showConfirmDialog, setShowConfirmDialog] = useState<boolean>(false);
+  // Context reducers
+  const [dataState, dataDispatch] = useReducer(dataReducer, initialDataState);
+  const [uiState, uiDispatch] = useReducer(uiReducer, initialUiState);
 
   // Fetch the initial CPUs data
   useEffect(() => {
     const fetchData = async () => {
       try {
-        setRequestLoading(true);
-        setMessage("Loading CPUs data, please wait...");
-        setLoading(true);
+        uiDispatch({ type: "TOGGLE_LOADING_MESSAGE", payload: true });
+        uiDispatch({
+          type: "SET_DIALOG_MESSAGE",
+          payload: "Loading CPUs data, please wait...",
+        });
+
+        dataDispatch({ type: "FETCH_START" });
         const response = await fetch(baseUrl);
-        if (!response.ok)
-          throw new Error("Failed to fetch data from the server");
         const data: CpuType[] = (await response.json()) as CpuType[];
-        setCpus(data);
+        dataDispatch({ type: "FETCH_SUCCESS", payload: data });
       } catch (err: unknown) {
         if (err instanceof Error) {
-          setError(err.message);
+          dataDispatch({ type: "FETCH_FAILURE", payload: err.message });
         } else {
-          setError(String(err));
+          dataDispatch({ type: "FETCH_FAILURE", payload: String(err) });
         }
       } finally {
-        setLoading(false);
-        setRequestLoading(false);
+        uiDispatch({ type: "TOGGLE_LOADING_MESSAGE", payload: false });
       }
     };
     void fetchData();
@@ -76,8 +64,11 @@ export default function App() {
   // Add a new CPU using the data from the add form
   async function addCpu(cpuObject: NewCpu): Promise<boolean> {
     try {
-      setMessage("Submitting data, please wait...");
-      setRequestLoading(true);
+      uiDispatch({
+        type: "SET_DIALOG_MESSAGE",
+        payload: "Submitting data, please wait...",
+      });
+      uiDispatch({ type: "TOGGLE_LOADING_MESSAGE", payload: true });
 
       // Check if the data is valid before sending it to the server
       if (
@@ -91,9 +82,9 @@ export default function App() {
         cpuObject.architecture === "" ||
         cpuObject.mbsocket === ""
       ) {
-        setMessage("Invalid CPU data");
-        setRequestLoading(false);
-        setShowNotification(true);
+        uiDispatch({ type: "SET_DIALOG_MESSAGE", payload: "Invalid CPU data" });
+        uiDispatch({ type: "TOGGLE_LOADING_MESSAGE", payload: false });
+        uiDispatch({ type: "TOGGLE_NOTIFICATION_MESSAGE", payload: true });
         return false;
       }
 
@@ -101,20 +92,27 @@ export default function App() {
       const returnedObject = await cpuService.create(cpuObject);
 
       // Update the Web UI to contain the new object
-      setCpus((prevCpus: CpuType[]) => [...prevCpus, returnedObject]); // Functional update for state
+      dataDispatch({
+        type: "ADD_CPU",
+        payload: returnedObject,
+      });
 
       // Show a confirmation message on success
-      setMessage(
-        `${returnedObject.manufacturer} ${returnedObject.model} was added!`,
-      );
-      setRequestLoading(false);
-      setShowNotification(true);
+      uiDispatch({
+        type: "SET_DIALOG_MESSAGE",
+        payload: `${returnedObject.manufacturer} ${returnedObject.model} was added!`,
+      });
+      uiDispatch({ type: "TOGGLE_LOADING_MESSAGE", payload: false });
+      uiDispatch({ type: "TOGGLE_NOTIFICATION_MESSAGE", payload: true });
 
       return true;
     } catch (_err: unknown) {
-      setMessage("Failed to add new CPU");
-      setRequestLoading(false);
-      setShowNotification(true);
+      uiDispatch({
+        type: "SET_DIALOG_MESSAGE",
+        payload: "Failed to add new CPU",
+      });
+      uiDispatch({ type: "TOGGLE_LOADING_MESSAGE", payload: false });
+      uiDispatch({ type: "TOGGLE_NOTIFICATION_MESSAGE", payload: true });
       return false;
     }
   }
@@ -122,48 +120,74 @@ export default function App() {
   // Update a CPU specifications
   async function updateCpu(newSpecs: CpuType): Promise<boolean> {
     try {
-      setMessage("Updating specs, please wait...");
-      setRequestLoading(true);
+      uiDispatch({
+        type: "SET_DIALOG_MESSAGE",
+        payload: "Updating specs, please wait...",
+      });
+      uiDispatch({ type: "TOGGLE_LOADING_MESSAGE", payload: true });
 
       // Send an API request to update the specs
       const updatedData = await cpuService.update(newSpecs.id, newSpecs);
 
       // Update the current CPU list with the updated returned object
-      setCpus(cpus.map((c) => (c.id === newSpecs.id ? updatedData : c)));
-      setRequestLoading(false);
+      dataDispatch({
+        type: "FETCH_SUCCESS",
+        payload: dataState.cpus.map((c: CpuType) =>
+          c.id === updatedData.id ? updatedData : c,
+        ),
+      });
+
+      uiDispatch({ type: "TOGGLE_LOADING_MESSAGE", payload: false });
       return true;
     } catch (_exception) {
-      setRequestLoading(false);
-      setMessage("Failed to update the CPU specs");
-      setShowNotification(true);
+      uiDispatch({ type: "TOGGLE_LOADING_MESSAGE", payload: false });
+      uiDispatch({
+        type: "SET_DIALOG_MESSAGE",
+        payload: "Failed to update the CPU specs",
+      });
+      uiDispatch({ type: "TOGGLE_NOTIFICATION_MESSAGE", payload: true });
       return false;
     }
   }
 
   // Remove a CPU from the list
-  async function deleteCpu(cpuToRemove: CpuType) {
+  async function deleteCpu() {
+    const cpuToRemove = dataState.cpuSelected;
+
     try {
-      setMessage("Removing CPU from the database, please wait...");
-      setRequestLoading(true);
+      if (cpuToRemove) {
+        uiDispatch({
+          type: "SET_DIALOG_MESSAGE",
+          payload: "Removing CPU from the database, please wait...",
+        });
+        uiDispatch({ type: "TOGGLE_LOADING_MESSAGE", payload: true });
 
-      await cpuService.remove(cpuToRemove.id);
+        await cpuService.remove(cpuToRemove.id);
 
-      // Remove the CPU from the current list
-      setCpus(cpus.filter((cpu: CpuType) => cpu.id !== cpuToRemove.id));
+        // Remove the CPU from the current list
+        dataDispatch({
+          type: "FETCH_SUCCESS",
+          payload: dataState.cpus.filter(
+            (c: CpuType) => c.id !== cpuToRemove.id,
+          ),
+        });
 
-      setRequestLoading(false);
-      setMessage(
-        `${cpuToRemove.manufacturer} ${cpuToRemove.model} was removed`,
-      );
-      setShowNotification(true);
-      return true;
+        uiDispatch({ type: "TOGGLE_LOADING_MESSAGE", payload: false });
+        uiDispatch({
+          type: "SET_DIALOG_MESSAGE",
+          payload: `${cpuToRemove.manufacturer} ${cpuToRemove.model} was removed`,
+        });
+        uiDispatch({ type: "TOGGLE_NOTIFICATION_MESSAGE", payload: true });
+      }
     } catch (_exception) {
-      setRequestLoading(false);
-      setMessage(
-        `Failed to remove ${cpuToRemove.manufacturer} ${cpuToRemove.model}`,
-      );
-      setShowNotification(true);
-      return false;
+      uiDispatch({ type: "TOGGLE_LOADING_MESSAGE", payload: false });
+      uiDispatch({
+        type: "SET_DIALOG_MESSAGE",
+        payload: `Failed to remove ${cpuToRemove?.manufacturer} ${cpuToRemove?.model}`,
+      });
+      uiDispatch({ type: "TOGGLE_NOTIFICATION_MESSAGE", payload: true });
+    } finally {
+      dataDispatch({ type: "SELECT_CPU", payload: null });
     }
   }
 
@@ -195,64 +219,44 @@ export default function App() {
     }
   }
 
-  // Filter the list based on the search term
-  const filteredCpus: CpuType[] = cpus.filter((cpu: CpuType) => {
-    return `${cpu.manufacturer} ${cpu.model}`
-      .toLowerCase()
-      .includes(searchTerm.toLowerCase());
-  });
-
   return (
-    <div>
+    <CpuContext.Provider
+      value={{
+        addCpu,
+        updateCpu,
+        deleteCpu,
+        dataState,
+        dataDispatch,
+        uiState,
+        uiDispatch,
+      }}
+    >
       <header>
         <h1 id="main-page-title">CPU Manager</h1>{" "}
       </header>
 
       {/* Main page controls section */}
       <nav>
-        <AddCpuForm
-          addCpu={addCpu}
-          showAddForm={showAddForm}
-          setShowAddForm={setShowAddForm}
-          requestLoading={requestLoading}
-        />
+        <AddCpuForm />
 
-        <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+        <SearchBar />
 
-        <PageIndex cpusData={filteredCpus} />
+        <PageIndex />
 
-        <div id="show-all-button" className="button-area">
-          <button onClick={() => setShowAll((prev) => !prev)}>
-            {showAll ? "Hide all data" : "Show all data"}
-          </button>
-        </div>
+        <ShowAllButton />
       </nav>
 
       {/* CPUs section */}
       <main>
         <section>
-          <CpuList
-            cpus={filteredCpus}
-            updateCpu={updateCpu}
-            deleteCpu={deleteCpu}
-            showAll={showAll}
-            scrollToIndex={scrollToIndex}
-            loading={loading}
-            error={error}
-            requestLoading={requestLoading}
-            showConfirmDialog={showConfirmDialog}
-            setShowConfirmDialog={setShowConfirmDialog}
-          />
+          <CpuList scrollToIndex={scrollToIndex} />
         </section>
       </main>
 
       {/* Dialog messages */}
-      <LoadingMessage showMessage={requestLoading} message={message} />
-      <NotificationMessage
-        showMessage={showNotification}
-        setShowMessage={setShowNotification}
-        message={message}
-      />
-    </div>
+      <LoadingMessage />
+      <NotificationMessage />
+      <ConfirmMessage />
+    </CpuContext.Provider>
   );
 }

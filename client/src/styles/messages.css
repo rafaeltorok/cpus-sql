@@ -1,13 +1,12 @@
 .dialog-container {
   max-width: 400px;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.75);
   color: white;
   border: 2px solid gray;
   border-radius: 1rem;
   margin-inline: auto;
   top: 50%;
-  transform: translateY(-100%);
-  background-color: black;
+  transform: translateY(-75%);
 }
 
 .dialog-container::backdrop {

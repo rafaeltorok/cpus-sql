@@ -1,36 +1,35 @@
 import { useEffect, useRef } from "react";
+import useCpuContext from "../../hooks/useCpuContext";
 
 import "../../styles/messages.css";
 
-interface NotificationMessageProps {
-  showMessage: boolean;
-  setShowMessage: (show: boolean) => void;
-  message: string;
-}
-
-export default function NotificationMessage({
-  showMessage,
-  setShowMessage,
-  message,
-}: NotificationMessageProps) {
+export default function NotificationMessage() {
   const ref = useRef<HTMLDialogElement>(null);
+  const { uiState, uiDispatch } = useCpuContext();
 
   useEffect(() => {
-    if (showMessage) {
+    if (uiState.notificationMessage) {
       ref.current?.showModal();
     } else {
       ref.current?.close();
     }
-  }, [showMessage]);
+  }, [uiState.notificationMessage]);
 
   return (
     <dialog
       className="dialog-container"
       ref={ref}
-      onCancel={(e) => e.preventDefault()} // stop Esc from closing it mid-load
+      onCancel={() =>
+        uiDispatch({ type: "TOGGLE_NOTIFICATION_MESSAGE", payload: false })
+      }
     >
-      <p className="dialog-message">{message}</p>
-      <button className="dialog-button" onClick={() => setShowMessage(false)}>
+      <p className="dialog-message">{uiState.dialogMessage}</p>
+      <button
+        className="dialog-button"
+        onClick={() => {
+          uiDispatch({ type: "TOGGLE_NOTIFICATION_MESSAGE", payload: false });
+        }}
+      >
         Close
       </button>
     </dialog>
