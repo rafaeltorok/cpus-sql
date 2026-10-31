@@ -137,19 +137,35 @@ docker run --name cpus-sql -p 3001:3001 --env-file=./.env cpus-sql
 
 - Uses Nginx as a reverse proxy.
 
-Start the Docker Compose orchestration
-```bash
-docker compose -f ./docker-compose.dev.yml up --build
-```
+- Requires the `node_modules` dependencies folders to be present within the Host filesystem.
 
-- Web UI access on http://localhost:8000
 
-- API requests on http://localhost:8000/api
+#### Steps
 
-Cleanup
-```bash
-docker compose -f ./docker-compose.dev.yml down -v
-```
+1. Install the necessary dependencies for both frontend and backend
+    ```bash
+    cd ./client && npm install
+    ```
+
+    ```bash
+    cd ./server && npm install
+    ```
+
+2. Start the Docker Compose orchestration
+    ```bash
+    docker compose -f ./docker-compose.dev.yml up --build
+    ```
+
+3. Access on
+
+    - Web UI access on http://localhost:8000
+
+    - API requests on http://localhost:8000/api
+
+4. Cleanup
+    ```bash
+    docker compose -f ./docker-compose.dev.yml down -v
+    ```
 
 #### Database access via Client UI
 
