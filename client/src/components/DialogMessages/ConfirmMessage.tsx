@@ -3,7 +3,7 @@ import useCpuContext from "../../hooks/useCpuContext";
 
 export default function ConfirmMessage() {
   const ref = useRef<HTMLDialogElement>(null);
-  const { uiState, uiDispatch, deleteCpu } = useCpuContext();
+  const { uiState, uiDispatch, dataDispatch, deleteCpu } = useCpuContext();
 
   useEffect(() => {
     if (uiState.confirmationMessage) {
@@ -32,6 +32,7 @@ export default function ConfirmMessage() {
         </button>
         <button className="dialog-button" onClick={() => {
           uiDispatch({ type: "TOGGLE_CONFIRMATION_MESSAGE", payload: false });
+          dataDispatch({ type: "SELECT_CPU", payload: null });
         }}>
           Cancel
         </button>

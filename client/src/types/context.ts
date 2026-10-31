@@ -38,7 +38,7 @@ export type DataActions =
   | { type: "FETCH_FAILURE"; payload: string }
   | { type: "SET_FOUND"; payload: CpuType[] }
   | { type: "ADD_CPU"; payload: CpuType }
-  | { type: "SELECT_CPU"; payload: CpuType };
+  | { type: "SELECT_CPU"; payload: CpuType | null };
 
 export type CpuContextType = {
   addCpu: (cpu: NewCpu) => Promise<boolean>;

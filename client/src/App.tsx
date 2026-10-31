@@ -155,6 +155,8 @@ export default function App() {
       uiDispatch({ type: "TOGGLE_LOADING_MESSAGE", payload: false });
       uiDispatch({ type: "SET_DIALOG_MESSAGE", payload: `Failed to remove ${cpuToRemove?.manufacturer} ${cpuToRemove?.model}` });
       uiDispatch({ type: "TOGGLE_NOTIFICATION_MESSAGE", payload: true });
+    } finally {
+      dataDispatch({ type: "SELECT_CPU", payload: null });
     }
   }
 
