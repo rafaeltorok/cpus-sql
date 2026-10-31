@@ -1,3 +1,5 @@
+import useCpuContext from "../hooks/useCpuContext";
+
 // Components
 import Cpu from "./Cpu/Cpu";
 
@@ -5,48 +7,36 @@ import Cpu from "./Cpu/Cpu";
 import type { CpuType } from "../types/types";
 
 interface CpuListProps {
-  cpus: CpuType[];
-  updateCpu: (specs: CpuType) => Promise<boolean>;
-  deleteCpu: (cpu: CpuType) => Promise<boolean>;
-  showAll: boolean;
   scrollToIndex: (cpuTableId: string) => void;
-  loading: boolean;
-  error: string;
   requestLoading: boolean;
   showConfirmDialog: boolean;
   setShowConfirmDialog: (show: boolean) => void;
 }
 
-// Component
 export default function CpuList({
-  cpus,
-  updateCpu,
-  deleteCpu,
-  showAll,
   scrollToIndex,
-  loading,
-  error,
   requestLoading,
   showConfirmDialog,
   setShowConfirmDialog,
 }: CpuListProps) {
-  if (loading) return <h2>Loading CPUs, please wait...</h2>;
+  const { uiState, dataState } = useCpuContext();
 
-  if (error) return <h2>Error: {error}</h2>;
+  if (dataState.loading) return <h2>Loading CPUs, please wait...</h2>;
+
+  if (dataState.error) return <h2>Error: {dataState.error}</h2>;
+
+  const cpusData = uiState.searchCpu ? dataState.cpusFound : dataState.cpus;
 
   return (
     <>
-      {cpus.length === 0 ? (
+      {cpusData.length === 0 ? (
         <h2>No CPUs were found</h2>
       ) : (
-        cpus.map((cpu) => (
+        cpusData.map((cpu: CpuType) => (
           <div key={cpu.id}>
             <Cpu
               key={cpu.id}
               cpu={cpu}
-              onUpdate={updateCpu}
-              onDelete={deleteCpu}
-              showAll={showAll}
               requestLoading={requestLoading}
               showConfirmDialog={showConfirmDialog}
               setShowConfirmDialog={setShowConfirmDialog}

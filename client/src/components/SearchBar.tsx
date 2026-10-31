@@ -1,45 +1,57 @@
-// React
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
+import useCpuContext from "../hooks/useCpuContext";
 
 // CSS styles
 import "../styles/searchBar.css";
 
-// TypeScript types
-interface SearchBarProps {
-  searchTerm: string;
-  setSearchTerm: React.Dispatch<React.SetStateAction<string>>;
-}
+import type { CpuType } from "../types/types";
 
-// Component
-export default function SearchBar({
-  searchTerm,
-  setSearchTerm,
-}: SearchBarProps) {
-  const [showSearch, setShowSearch] = useState(false);
+export default function SearchBar() {
+  const { uiState, uiDispatch, dataState, dataDispatch } = useCpuContext();
 
   useEffect(() => {
-    if (!showSearch) {
-      setSearchTerm("");
+    if (!uiState.showSearch) {
+      uiDispatch({
+        type: "SET_SEARCH",
+        payload: "",
+      });
     }
-  }, [showSearch, setSearchTerm]);
+  }, [uiState.showSearch, uiDispatch]);
+
+  function handleSearch(searchTerm: string) {
+    uiDispatch({
+      type: "SET_SEARCH",
+      payload: searchTerm,
+    });
+
+    // Filter the list based on the search term
+    dataDispatch({
+      type: "SET_FOUND",
+      payload: dataState.cpus.filter((cpu: CpuType) => {
+        return `${cpu.manufacturer} ${cpu.model}`
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase());
+      })
+    })
+  }
 
   return (
     <div id="search-bar-field">
       <button
         id="show-search-button"
         type="button"
-        onClick={() => setShowSearch(!showSearch)}
+        onClick={() => uiDispatch({ type: "TOGGLE_SEARCH" })}
       >
-        {showSearch ? "Cancel" : "Search"}
+        {uiState.showSearch ? "Cancel" : "Search"}
       </button>
-      {showSearch && (
+      {uiState.showSearch && (
         <form>
           <input
             type="search"
             id="search-bar-input"
             placeholder="Search"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value.trimStart())}
+            value={uiState.searchCpu}
+            onChange={(e) => handleSearch(e.target.value.trimStart())}
           />
         </form>
       )}

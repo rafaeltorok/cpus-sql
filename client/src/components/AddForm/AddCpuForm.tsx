@@ -1,5 +1,5 @@
-// React
 import { useState } from "react";
+import useCpuContext from "../../hooks/useCpuContext";
 
 // Components
 import FormRow from "./FormRow";
@@ -8,12 +8,9 @@ import FormRow from "./FormRow";
 import "../../styles/addCpuForm.css";
 
 // TypeScript types
-import type { InputData, NewCpu } from "../../types/types";
+import type { InputData } from "../../types/types";
 
 interface AddCpuFormProps {
-  addCpu: (cpu: NewCpu) => Promise<boolean>;
-  showAddForm: boolean;
-  setShowAddForm: React.Dispatch<React.SetStateAction<boolean>>;
   requestLoading: boolean;
 }
 
@@ -21,9 +18,6 @@ type Event = React.ChangeEvent<HTMLInputElement>;
 
 // Component
 export default function AddCpuForm({
-  addCpu,
-  showAddForm,
-  setShowAddForm,
   requestLoading,
 }: AddCpuFormProps) {
   const [cpuSpecs, setCpuSpecs] = useState<InputData>({
@@ -38,6 +32,8 @@ export default function AddCpuForm({
     mbsocket: "",
     tdp: "0",
   });
+
+  const { addCpu, uiState, uiDispatch } = useCpuContext();
 
   // Handle the add form submit
   const handleSubmit = async (
@@ -74,7 +70,9 @@ export default function AddCpuForm({
         tdp: "0",
       });
 
-      setShowAddForm(false);
+      uiDispatch({
+        type: "TOGGLE_ADD_FORM",
+      });
     }
   };
 
@@ -90,12 +88,12 @@ export default function AddCpuForm({
           <button
             id="add-cpu-button"
             type="button"
-            onClick={() => setShowAddForm((prev) => !prev)}
+            onClick={() => uiDispatch({ type: "TOGGLE_ADD_FORM" })}
           >
-            {showAddForm ? "Cancel" : "Add Processor"}
+            {uiState.showAddForm ? "Cancel" : "Add Processor"}
           </button>
 
-          {showAddForm && (
+          {uiState.showAddForm && (
             <fieldset className="add-cpu-field">
               <FormRow
                 id="manufacturer"

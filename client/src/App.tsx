@@ -1,11 +1,17 @@
 // React
-import { useState, useEffect } from "react";
+import { useState, useEffect, useReducer } from "react";
+
+// React context
+import CpuContext from "./context/cpuContext";
+import dataReducer, { initialDataState} from "./reducers/dataReducer";
+import uiReducer, { initialUiState } from "./reducers/uiReducer";
 
 // Components
 import CpuList from "./components/CpuList";
 import AddCpuForm from "./components/AddForm/AddCpuForm";
 import PageIndex from "./components/PageIndex";
 import SearchBar from "./components/SearchBar";
+import ShowAllButton from "./components/ShowAllButton";
 import LoadingMessage from "./components/DialogMessages/LoadingMessage";
 import NotificationMessage from "./components/DialogMessages/NotificationMessage";
 
@@ -23,19 +29,9 @@ export default function App() {
   // Set the API server URL
   const baseUrl = "/api/cpus";
 
-  // Handles the initial loading state for all CPUs data
-  const [cpus, setCpus] = useState<CpuType[]>([]);
-  const [error, setError] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(true);
-
-  // Controls the visibility for all tables
-  const [showAll, setShowAll] = useState<boolean>(false);
-
-  // Handles the search term within the search bar
-  const [searchTerm, setSearchTerm] = useState<string>("");
-
-  // Controls the add form visibility
-  const [showAddForm, setShowAddForm] = useState<boolean>(false);
+  // Context reducers
+  const [dataState, dataDispatch] = useReducer(dataReducer, initialDataState);
+  const [uiState, uiDispatch] = useReducer(uiReducer, initialUiState);
 
   // Displays a popup dialog loading message when sending API requests
   const [requestLoading, setRequestLoading] = useState<boolean>(false);
@@ -53,20 +49,18 @@ export default function App() {
       try {
         setRequestLoading(true);
         setMessage("Loading CPUs data, please wait...");
-        setLoading(true);
+        
+        dataDispatch({ type: "FETCH_START" });
         const response = await fetch(baseUrl);
-        if (!response.ok)
-          throw new Error("Failed to fetch data from the server");
         const data: CpuType[] = (await response.json()) as CpuType[];
-        setCpus(data);
+        dataDispatch({ type: "FETCH_SUCCESS", payload: data });
       } catch (err: unknown) {
-        if (err instanceof Error) {
-          setError(err.message);
+         if (err instanceof Error) {
+          dataDispatch({ type: "FETCH_FAILURE", payload: err.message });
         } else {
-          setError(String(err));
+          dataDispatch({ type: "FETCH_FAILURE", payload: String(err) });
         }
       } finally {
-        setLoading(false);
         setRequestLoading(false);
       }
     };
@@ -101,7 +95,10 @@ export default function App() {
       const returnedObject = await cpuService.create(cpuObject);
 
       // Update the Web UI to contain the new object
-      setCpus((prevCpus: CpuType[]) => [...prevCpus, returnedObject]); // Functional update for state
+      dataDispatch({
+        type: "ADD_CPU",
+        payload: returnedObject,
+      });
 
       // Show a confirmation message on success
       setMessage(
@@ -129,7 +126,11 @@ export default function App() {
       const updatedData = await cpuService.update(newSpecs.id, newSpecs);
 
       // Update the current CPU list with the updated returned object
-      setCpus(cpus.map((c) => (c.id === newSpecs.id ? updatedData : c)));
+      dataDispatch({
+        type: "FETCH_SUCCESS",
+        payload: dataState.cpus.map((c: CpuType) => c.id === updatedData.id ? updatedData : c),
+      });
+
       setRequestLoading(false);
       return true;
     } catch (_exception) {
@@ -149,7 +150,10 @@ export default function App() {
       await cpuService.remove(cpuToRemove.id);
 
       // Remove the CPU from the current list
-      setCpus(cpus.filter((cpu: CpuType) => cpu.id !== cpuToRemove.id));
+      dataDispatch({
+        type: "FETCH_SUCCESS",
+        payload: dataState.cpus.filter((c: CpuType) => c.id !== cpuToRemove.id),
+      });
 
       setRequestLoading(false);
       setMessage(
@@ -195,15 +199,18 @@ export default function App() {
     }
   }
 
-  // Filter the list based on the search term
-  const filteredCpus: CpuType[] = cpus.filter((cpu: CpuType) => {
-    return `${cpu.manufacturer} ${cpu.model}`
-      .toLowerCase()
-      .includes(searchTerm.toLowerCase());
-  });
-
   return (
-    <div>
+    <CpuContext.Provider
+      value={{
+        addCpu,
+        updateCpu,
+        deleteCpu,
+        dataState,
+        dataDispatch,
+        uiState,
+        uiDispatch,
+      }}
+    >
       <header>
         <h1 id="main-page-title">CPU Manager</h1>{" "}
       </header>
@@ -211,34 +218,21 @@ export default function App() {
       {/* Main page controls section */}
       <nav>
         <AddCpuForm
-          addCpu={addCpu}
-          showAddForm={showAddForm}
-          setShowAddForm={setShowAddForm}
           requestLoading={requestLoading}
         />
 
-        <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+        <SearchBar />
 
-        <PageIndex cpusData={filteredCpus} />
+        <PageIndex />
 
-        <div id="show-all-button" className="button-area">
-          <button onClick={() => setShowAll((prev) => !prev)}>
-            {showAll ? "Hide all data" : "Show all data"}
-          </button>
-        </div>
+        <ShowAllButton />
       </nav>
 
       {/* CPUs section */}
       <main>
         <section>
           <CpuList
-            cpus={filteredCpus}
-            updateCpu={updateCpu}
-            deleteCpu={deleteCpu}
-            showAll={showAll}
             scrollToIndex={scrollToIndex}
-            loading={loading}
-            error={error}
             requestLoading={requestLoading}
             showConfirmDialog={showConfirmDialog}
             setShowConfirmDialog={setShowConfirmDialog}
@@ -253,6 +247,6 @@ export default function App() {
         setShowMessage={setShowNotification}
         message={message}
       />
-    </div>
+    </CpuContext.Provider>
   );
 }

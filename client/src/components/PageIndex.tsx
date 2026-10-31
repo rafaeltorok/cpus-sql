@@ -1,19 +1,11 @@
-// React
-import { useState } from "react";
+import useCpuContext from "../hooks/useCpuContext";
 
 // CSS styles
 import "../styles/pageIndex.css";
 
-// TypeScript types
-import type { CpuType } from "../types/types";
-
-interface PageIndexProps {
-  cpusData: CpuType[];
-}
-
 // Component
-export default function PageIndex({ cpusData }: PageIndexProps) {
-  const [showIndex, setShowIndex] = useState(false);
+export default function PageIndex() {
+  const { uiState, uiDispatch, dataState } = useCpuContext();
 
   // Scroll to cpu when index item is clicked
   const scrollToCpu = (id: string) => {
@@ -29,16 +21,18 @@ export default function PageIndex({ cpusData }: PageIndexProps) {
     }
   };
 
+  const cpusData = uiState.searchCpu ? dataState.cpusFound : dataState.cpus;
+
   return (
     <div id="page-index-container">
       <button
         id="show-index-button"
         type="button"
-        onClick={() => setShowIndex((prev) => !prev)}
+        onClick={() => uiDispatch({ type: "TOGGLE_INDEX" })}
       >
-        {showIndex ? "Hide index" : "Show index"}
+        {uiState.showIndex ? "Hide index" : "Show index"}
       </button>
-      {showIndex && (
+      {uiState.showIndex && (
         <div className="index-list-container">
           <ul className="index-list">
             {cpusData.map((cpu) => (

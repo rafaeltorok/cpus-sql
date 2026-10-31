@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import useCpuContext from "../../hooks/useCpuContext";
 
 // Components
 import DataRow from "./DataRow";
@@ -13,9 +14,6 @@ import type { CpuType } from "../../types/types";
 
 interface CpuProps {
   cpu: CpuType;
-  onUpdate: (specs: CpuType) => Promise<boolean>;
-  onDelete: (cpu: CpuType) => Promise<boolean>;
-  showAll: boolean;
   requestLoading: boolean;
   showConfirmDialog: boolean;
   setShowConfirmDialog: (show: boolean) => void;
@@ -24,13 +22,12 @@ interface CpuProps {
 // Component
 export default function Cpu({
   cpu,
-  onUpdate,
-  onDelete,
-  showAll,
   requestLoading,
   showConfirmDialog,
   setShowConfirmDialog,
 }: CpuProps) {
+  const { uiState, updateCpu, deleteCpu } = useCpuContext();
+
   const [showBody, setShowBody] = useState(false);
   const [editMode, setEditMode] = useState(false);
 
@@ -40,12 +37,12 @@ export default function Cpu({
   // Sync individual state with global "Show All" toggle
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    setShowBody(showAll);
-  }, [showAll]);
+    setShowBody(uiState.showAll);
+  }, [uiState]);
 
   // Handles calling the update function with the new specs data
   async function handleUpdate(): Promise<void> {
-    const confirm = await onUpdate(cpuData);
+    const confirm = await updateCpu(cpuData);
 
     // Only leave the edit mode if the update succeeds
     if (!requestLoading && confirm) {
@@ -53,8 +50,9 @@ export default function Cpu({
     }
   }
 
+  // Handles calling the delete function to remove the current CPU
   function handleDelete(): void {
-    void onDelete(cpu);
+    void deleteCpu(cpu);
   }
 
   // Defines the manufacturer color for to style each table
@@ -188,8 +186,6 @@ export default function Cpu({
           </>
         )}
       </table>
-
-      {/* Confirmation dialog before removing the CPU */}
       <ConfirmMessage
         showMessage={showConfirmDialog}
         setShowMessage={setShowConfirmDialog}
